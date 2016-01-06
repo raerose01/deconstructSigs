@@ -1,0 +1,18 @@
+Package: deconstructSigs
+Type: Package
+Title: Identifies signatures present in a tumor sample when given context information
+Version: 1.5
+Date: 2015-12-08
+Author: Rachel Rosenthal
+Maintainer: Rachel Rosenthal <rachel.rosenthal.14@ucl.ac.uk>
+Description: Takes sample information in the form of the fraction of mutations
+    in each of 96 trinucleotide contexts and identifies the weighted combination 
+    of published signatures that, when summed, most closely reconstructs the 
+    mutational profile.
+License: GPL (>= 2)
+Imports: ggplot2,
+    reshape2,
+    gridExtra,
+    BSgenome,
+    BSgenome.Hsapiens.UCSC.hg19
+LazyData: yes
