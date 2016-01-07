@@ -8,6 +8,7 @@
 #' @param upper Upper bound to search in
 #' @param tol How exact the answer must be
 #' @return Returns a value that minimizes the function input
+#' @export
 golden.section.search = function(f, lower, upper, tol = 1e-6){
   
   golden.ratio <- (sqrt(5)-1)/2

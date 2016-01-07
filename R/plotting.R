@@ -5,6 +5,8 @@
 #' @keywords internal
 #' @param contexts One of the entries in the output list from whichSignatures()
 #' @return Returns a data frame with sample.id, full_context, fraction, and mutation as column names
+
+#' @export
 formatContexts = function(contexts){
   for_plotting = reshape2::melt(contexts)
   colnames(for_plotting)[1] = "sample.id"
@@ -26,8 +28,11 @@ formatContexts = function(contexts){
 #' @return Plots the trinucleotide frequency for the given tumor on the top 
 #'   panel, the calculated one on the middle panel, and the difference between 
 #'   the two on the bottom panel.
+#' @export
 #' @examples
+#' \dontrun{}
 #' plotSignatures(example.output, sub = "example")
+
 plotSignatures = function(sigs.output, sub = ""){
   
   tumor   <- sigs.output[["tumor"]]
@@ -83,6 +88,7 @@ plotSignatures = function(sigs.output, sub = ""){
 #' @param sub A character vector that specifies cancer subtype if wanted
 #' @return Plots a pie chart of the weights calculated in the given
 #' tumor sample
+#' @export
 #' @examples
 #' makePie(example.output)
 makePie <- function(sigs.output, sub = ""){
@@ -118,9 +124,9 @@ makePie <- function(sigs.output, sub = ""){
   # Set up color palette
   sigs.present         <- colnames(weights)
   colors.sigs.present = all.colors$color[match(sigs.present, all.colors$signature)]
-  palette(as.character(colors.sigs.present))  
+  grDevices::palette(as.character(colors.sigs.present))  
   
-  pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = paste(rownames(weights), " -- ", sub, sep = ""))
+  graphics::pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = paste(rownames(weights), " -- ", sub, sep = ""))
 
 }
 ################################################ 

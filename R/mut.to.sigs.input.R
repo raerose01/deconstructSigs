@@ -7,6 +7,7 @@
 #' @param tri Character vector of "A", "G", "C", or "T"
 #' @param nr If TRUE returns only the complement of the input sequence
 #' @return Returns a character vector containing the complemented input sequence
+#' @export
 findComp = function(tri, nr = FALSE) {
   pos=c("A","G","C","T")
   neg=c("T","C","G","A")
@@ -49,14 +50,14 @@ findComp = function(tri, nr = FALSE) {
 #'                                pos = "pos", 
 #'                                ref = "ref", 
 #'                                alt = "alt")
-
+#' @export
 mut.to.sigs.input = function(mut.ref, sample.id, chr, pos, ref, alt){
   
   if(exists("mut.ref", mode = "list")){
     mut.full <- mut.ref
   } else {
     if(file.exists(mut.ref)){
-      mut.full <- read.table(mut.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      mut.full <- utils::read.table(mut.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
     } else {
       stop("mut.ref is neither a file nor a loaded data frame")
     }

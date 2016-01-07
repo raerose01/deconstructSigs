@@ -8,6 +8,7 @@
 #' @param signatures Signatures matrix
 #' @param w Weights matrix
 #' @return Returns the sum squared error between calculated and actual trinucleotide context fractions
+#' @export
 getError = function(tumor, signatures, w){
   w_norm = w/sum(w)
   product = w_norm %*% signatures
@@ -27,6 +28,7 @@ getError = function(tumor, signatures, w){
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
 #' @return Returns the index corresponding to the signature that best describes the input data
+#' @export
 findSeed = function(tumor, signatures){
   w0 = vector()
   for(i in 1:nrow(signatures)){
@@ -48,6 +50,7 @@ findSeed = function(tumor, signatures){
 #' @param w Weights matrix
 #' @param signatures.limit Number of signatures to limit the search to
 #' @return Returns an updated weights matrix
+#' @export
 updateW_GR = function(tumor, signatures, w, signatures.limit, bound = 100){
   error_old = getError(tumor, signatures, w)
   boo = matrix(+Inf, nrow = 1, ncol = nrow(signatures))

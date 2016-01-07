@@ -9,6 +9,7 @@
 #' @param col column names
 #' @param trimer.counts count of the number of times each trimer is found in the area sequenced
 #' @return Returns a normalized column based on the trimer counts
+#' @export
 norm.it <- function(col, trimer.counts){
   #trimer  <- substr(colnames(col), 1, 3)
   trimer  <- paste(substr(colnames(col), 1, 1), substr(colnames(col), 3, 3), substr(colnames(col), 7, 7), sep = "")
@@ -27,13 +28,14 @@ norm.it <- function(col, trimer.counts){
 #' @param mut.counts.ref data frame of counts of mutations in each trinucleotide context for each sample or location where .txt file is found
 #' @param trimer.counts.ref data frame of counts of times each trinculeotide context is seen in sequencing area or location where the .txt file is found
 #' @return Returns the trinucleotide context fraction
+#' @export
 getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
     
   if(exists("mut.counts.ref", mode = "list")){
     mut.counts <- mut.counts.ref
   } else {
     if(file.exists(mut.counts.ref)){
-      mut.counts <- read.table(mut.counts.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      mut.counts <- utils::read.table(mut.counts.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
     } else {
       print("mut.counts.ref is neither a file nor a loaded data frame")
     }
@@ -43,7 +45,7 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
     trimer.counts <- trimer.counts.ref
   } else {
     if(file.exists(trimer.counts.ref)){
-      trimer.counts <- read.table(trimer.counts.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      trimer.counts <- utils::read.table(trimer.counts.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
     } else {
       print("trimer.counts.ref is neither a file nor a loaded data frame")
     }
@@ -70,6 +72,7 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
 #' @keywords internal
 #' @param col Vector of column names
 #' @return Returns a newly formatted vector of column names
+#' @export
 changeColumnNames <- function(col){
   new.col <- paste(substr(col, 1, 1), "[", substr(col, 2, 2), ">", substr(col, 8, 8), "]", substr(col, 3, 3), sep = "")
   return(new.col)

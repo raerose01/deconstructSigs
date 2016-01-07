@@ -20,12 +20,12 @@
 #' @return A list of the weights for each signatures, the product when those are
 #'   multiplied on the signatures, the difference between the tumor sample and
 #'   product, the tumor sample tricontext distribution given, and the unknown weight.
+#' @export
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors, 
 #'                        signatures.ref = signatures, 
 #'                        sample.id = "1", 
 #'                        contexts.needed = FALSE)
-
 
 whichSignatures = function(tumor.ref = NA, 
                            sample.id, 
@@ -43,7 +43,7 @@ whichSignatures = function(tumor.ref = NA,
     }
   } else {
     if(file.exists(tumor.ref)){
-      tumor   <- read.table(tumor.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      tumor   <- utils::read.table(tumor.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
       if(contexts.needed == TRUE){
         tumor <- getTriContextFraction(tumor, trimer.counts.loc) 
       }
@@ -55,7 +55,7 @@ whichSignatures = function(tumor.ref = NA,
   # Take patient id given
   tumor <- as.matrix(tumor)
   tumor <- subset(tumor, rownames(tumor) == sample.id)
-  if(rowSums(tumor) != 1){
+  if(round(rowSums(tumor), digits = 1) != 1){
     warning(paste('Sample: ', sample.id, ' is not normalized\n', 'Consider using "contexts.needed = TRUE"', sep = ' '))
   }
   
@@ -64,7 +64,7 @@ whichSignatures = function(tumor.ref = NA,
     signatures   <- signatures.ref
   } else {
     if(file.exists(signatures.ref)){
-      signatures <- read.csv(signatures.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      signatures <- utils::read.csv(signatures.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
     } else {
       print("signatures.ref is neither a file nor a loaded data frame") 
     }  
