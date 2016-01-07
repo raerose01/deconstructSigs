@@ -6,7 +6,7 @@
 \usage{
 whichSignatures(tumor.ref = NA, sample.id, signatures.ref = signatures,
   associated = c(), signatures.limit = NA, signature.cutoff = 0.06,
-  contexts.needed = FALSE, trimer.counts.loc = tri.counts.exome)
+  contexts.needed = FALSE, trimer.counts.loc)
 }
 \arguments{
 \item{tumor.ref}{Either a data frame or location of input text file, where rows are samples,
@@ -42,6 +42,7 @@ Determines how much of each signature is present in the sample given
 test = whichSignatures(tumor.ref = randomly.generated.tumors, 
                        signatures.ref = signatures, 
                        sample.id = "1", 
-                       contexts.needed = FALSE)
+                       contexts.needed = FALSE,
+                       trimer.counts.loc = tri.counts.exome)
 }
 

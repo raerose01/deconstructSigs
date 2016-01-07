@@ -25,7 +25,8 @@
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors, 
 #'                        signatures.ref = signatures, 
 #'                        sample.id = "1", 
-#'                        contexts.needed = FALSE)
+#'                        contexts.needed = FALSE,
+#'                        trimer.counts.loc = tri.counts.exome)
 
 whichSignatures = function(tumor.ref = NA, 
                            sample.id, 
@@ -34,7 +35,7 @@ whichSignatures = function(tumor.ref = NA,
                            signatures.limit = NA,
                            signature.cutoff = 0.06,
                            contexts.needed = FALSE, 
-                           trimer.counts.loc = tri.counts.exome) {
+                           trimer.counts.loc) {
   
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
