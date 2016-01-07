@@ -30,7 +30,6 @@ formatContexts = function(contexts){
 #'   the two on the bottom panel.
 #' @export
 #' @examples
-#' \dontrun{}
 #' plotSignatures(example.output, sub = "example")
 
 plotSignatures = function(sigs.output, sub = ""){
@@ -42,40 +41,47 @@ plotSignatures = function(sigs.output, sub = ""){
   
   y_limit        <- 1.2 * max(tumor, product)
   tumor_plotting <- formatContexts(tumor)
+  product_plotting <- formatContexts(product)
+  error_summed <- round(sqrt(sum(diff*diff)), digits = 3)
+  diff_plotting <- formatContexts(diff)
+  
   name           <- unique(tumor_plotting$sample.id)
   subtype        <- sub
-  
-  #ggp <- ggplot2::ggplot(tumor_plotting, ggplot2::aes(x=full_context, y=fraction, fill=mutation))
-  ggp <- ggplot2::ggplot(data = tumor_plotting, ggplot2::aes_string(x = 'full_context', y = 'fraction', fill = 'mutation'))
-  #plot1 = ggp + ggplot2::geom_histogram(stat="identity") + ggplot2::ggtitle(paste(name, " -- ", subtype, sep = "")) + ggplot2::scale_fill_manual(values=c("#1EBBEB", "#000000", "#E0242A", "#A3A3A3", "#A3CC6E", "#EDC6C2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(0, y_limit)
-  plot1 <- ggp + ggplot2::geom_histogram(stat="identity") + ggplot2::ggtitle(paste(name, " -- ", subtype, sep = "")) + ggplot2::scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(0, y_limit)
-  
   tmp <- which(weights != 0)
   c <- paste(colnames(weights)[tmp[1]], " : ", round(weights[tmp[1]], 3), sep = "")
   if(length(tmp)>1){
     for(i in tmp[2:length(tmp)]){
-      c = paste(c, " & ", colnames(weights)[i], " : ", round(weights[i], 3), sep = "")
+      c <- paste(c, " & ", colnames(weights)[i], " : ", round(weights[i], 3), sep = "")
     }
   }
   
-  product_plotting <- formatContexts(product)
-  #ggp <- ggplot2::ggplot(product_plotting, ggplot2::aes(x=full_context, y=fraction, fill=mutation))
-  ggp <- ggplot2::ggplot(product_plotting, ggplot2::aes_string(x='full_context', y='fraction', fill='mutation'))
-  #plot2 = ggp + ggplot2::geom_histogram(stat="identity") + ggplot2::ggtitle(c) + ggplot2::scale_fill_manual(values=c("#1EBBEB", "#000000", "#E0242A", "#A3A3A3", "#A3CC6E", "#EDC6C2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(0, y_limit)
-  plot2 <- ggp + ggplot2::geom_histogram(stat="identity") + ggplot2::ggtitle(c) + ggplot2::scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(0, y_limit)
+  graphics::par(mfrow = c(3,1), xpd = FALSE, mar=c(5, 4, 4, 2), oma=c(0,0,0,4))
+  grDevices::palette(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
   
-  error_summed <- sqrt(sum(diff*diff))
-  diff_plotting <- formatContexts(diff)
-  #ggp <- ggplot2::ggplot(diff_plotting, ggplot2::aes(x=full_context, y=fraction, fill=mutation))
-  ggp <- ggplot2::ggplot(diff_plotting, ggplot2::aes_string(x='full_context', y='fraction', fill='mutation'))
-  #plot3 = ggp + ggplot2::geom_histogram(stat = "identity", position="identity") + ggplot2::ggtitle(paste("error = ", error_summed, sep = "")) + ggplot2::scale_fill_manual(values=c("#1EBBEB", "#000000", "#E0242A", "#A3A3A3", "#A3CC6E", "#EDC6C2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(-y_limit, y_limit)
-  plot3 <- ggp + ggplot2::geom_histogram(stat = "identity", position="identity") + ggplot2::ggtitle(paste("error = ", error_summed, sep = "")) + ggplot2::scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2")) + ggplot2::theme_bw() +  ggplot2::theme(axis.text.x=ggplot2::element_text(angle = 90, vjust = 0.5), plot.title = ggplot2::element_text(lineheight=.8, face="bold")) + ggplot2::ylim(-y_limit, y_limit)
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+  graphics::box()
+  x = graphics::par('usr')
+  graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = paste(name, " -- ", subtype, sep = ""), ylab = 'fraction', add = TRUE)
   
-  gA <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot1))
-  gB <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot2))
-  gC <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(plot3))
-  #grid.newpage()
-  gridExtra::grid.arrange(gA, gB, gC, nrow = 3, heights = c(1/3, 1/3, 1/3))
+  graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+  graphics::box()
+  x = graphics::par('usr')
+  graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+  graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(product_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
+  
+  graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+  graphics::box()
+  x = graphics::par('usr')
+  graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
+  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+  graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(diff_plotting$mutation), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
+  
+  graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
+  graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+  graphics::legend('right', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
   
 }
 
