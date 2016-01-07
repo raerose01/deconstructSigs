@@ -11,9 +11,7 @@ Description: Takes sample information in the form of the fraction of mutations
     mutational profile.
 License: GPL (>= 2)
 Imports:
-    ggplot2,
     reshape2,
-    gridExtra,
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg19,
     grDevices,
