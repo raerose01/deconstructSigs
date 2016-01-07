@@ -28,7 +28,8 @@ Rachel Rosenthal rachel.rosenthal.14@ucl.ac.uk
 test = whichSignatures(tumor.ref = randomly.generated.tumors,
                        signatures.ref = signatures,
                        sample.id = "1",
-                       contexts.needed = FALSE)                      
+                       contexts.needed = FALSE,
+                       trimer.counts.loc = tri.counts.exome)                      
 plotSignatures(example.output, sub = "example")
 makePie(example.output, sub = "example")
 }
