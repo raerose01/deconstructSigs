@@ -15,7 +15,10 @@ Imports:
     reshape2,
     gridExtra,
     BSgenome,
-    BSgenome.Hsapiens.UCSC.hg19
+    BSgenome.Hsapiens.UCSC.hg19,
+    grDevices,
+    graphics,
+    utils
 LazyData: yes
 URL: https://github.com/raerose01/deconstructSigs
 BugReports: https://github.com/raerose01/deconstructSigs/issues
