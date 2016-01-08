@@ -85,28 +85,17 @@ The output from `whichSignatures` can be visualized using the function `plotSign
 ``` r
 # Plot output
 plotSignatures(sample_1)
-```
-
-![](README-unnamed-chunk-6-1.png)
-
-``` r
 plotSignatures(sample_2)
 ```
 
-![](README-unnamed-chunk-6-2.png)
-\#\#\# `makePie()`
+![alt text](inst/extdata/plotSignatures.png)
+
+### `makePie()`
 
 The output from `whichSignatures` can be visualized using the function `makePie`. This function takes the `whichSignatures` output (`sigs.output`) and an optional identifying parameter (`sub`).
 
 ``` r
 # Plot output
 makePie(sample_1)
-```
-
-![](README-unnamed-chunk-7-1.png)
-
-``` r
 makePie(sample_2)
 ```
-
-![](README-unnamed-chunk-7-2.png)

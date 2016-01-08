@@ -95,17 +95,19 @@ Additional parameters to `whichSignatures` are:
 
 The output from `whichSignatures` can be visualized using the function `plotSignatures`.  This function takes the `whichSignatures` output (`sigs.output`) and an optional identifying parameter (`sub`). 
 
-```{r}
+```{r, eval=FALSE}
 # Plot output
 plotSignatures(sample_1)
 plotSignatures(sample_2)
 ```
 
+![alt text](inst/extdata/plotSignatures.png)
+
 ### `makePie()`
 
 The output from `whichSignatures` can be visualized using the function `makePie`.  This function takes the `whichSignatures` output (`sigs.output`) and an optional identifying parameter (`sub`). 
 
-```{r}
+```{r, eval=FALSE}
 # Plot output
 makePie(sample_1)
 makePie(sample_2)
