@@ -6,8 +6,8 @@
 \title{Published Signatures from Sanger COSMIC}
 \format{A data frame of 30 rows and 96 columns}
 \description{
-A dataset containing the additional signatures identified
-read into R as a data frame. Data found: \url{http://cancer.sanger.ac.uk/cosmic/signatures}
+A dataset containing the additional signatures identified read into R as a
+data frame. Data found: \url{http://cancer.sanger.ac.uk/cosmic/signatures}
 }
 \keyword{datasets}
 

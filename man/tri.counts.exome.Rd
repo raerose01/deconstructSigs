@@ -6,8 +6,8 @@
 \title{The counts of every trinuclotide frequency in an exome}
 \format{A data frame of 32 rows and 1 column that contains the counts}
 \description{
-A datset containing the number of times each trinucleotide (ex: ACA)
-is found in the exome region captured by sequencing.
+A datset containing the number of times each trinucleotide (ex: ACA) is found
+in the exome region captured by sequencing.
 }
 \keyword{datasets}
 

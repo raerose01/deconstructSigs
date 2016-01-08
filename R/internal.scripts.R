@@ -1,13 +1,15 @@
 
 #' Calculates error
 #' 
-#' Finds error between calculated trinucleotide context fractions and inputted ones
+#' Finds error between calculated trinucleotide context fractions and inputted
+#' ones
 #' 
 #' @keywords internal
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
 #' @param w Weights matrix
-#' @return Returns the sum squared error between calculated and actual trinucleotide context fractions
+#' @return Returns the sum squared error between calculated and actual
+#'   trinucleotide context fractions
 #' @export
 getError = function(tumor, signatures, w){
   w_norm = w/sum(w)
@@ -22,12 +24,14 @@ getError = function(tumor, signatures, w){
 
 #' Seeds weight matrix
 #' 
-#' Determines which single signature results in the lowest sum-squared error and uses that as a seed to start from
+#' Determines which single signature results in the lowest sum-squared error and
+#' uses that as a seed to start from
 #' 
 #' @keywords internal
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
-#' @return Returns the index corresponding to the signature that best describes the input data
+#' @return Returns the index corresponding to the signature that best describes
+#'   the input data
 #' @export
 findSeed = function(tumor, signatures){
   w0 = vector()
@@ -42,7 +46,8 @@ findSeed = function(tumor, signatures){
 
 #' Updates the weights matrix
 #' 
-#' Determines what proportion of what signature, when added to the current weights matrix, results in the lowest sum-squared error
+#' Determines what proportion of what signature, when added to the current
+#' weights matrix, results in the lowest sum-squared error
 #' 
 #' @keywords internal
 #' @param tumor Actual trinucleotide context fractions

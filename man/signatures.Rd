@@ -6,8 +6,9 @@
 \title{Published Signatures from Alexandrov et al 2013}
 \format{A data frame of 27 rows and 96 columns}
 \description{
-A dataset containing the published signatures from Alexandrov
-et al read into R as a data frame. Data found: \url{ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl}
+A dataset containing the published signatures from Alexandrov et al read into
+R as a data frame. Data found:
+\url{ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl}
 }
 \keyword{datasets}
 

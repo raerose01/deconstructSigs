@@ -12,10 +12,12 @@ findSeed(tumor, signatures)
 \item{signatures}{Signatures matrix}
 }
 \value{
-Returns the index corresponding to the signature that best describes the input data
+Returns the index corresponding to the signature that best describes
+  the input data
 }
 \description{
-Determines which single signature results in the lowest sum-squared error and uses that as a seed to start from
+Determines which single signature results in the lowest sum-squared error and
+uses that as a seed to start from
 }
 \keyword{internal}
 

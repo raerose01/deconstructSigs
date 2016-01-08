@@ -6,17 +6,16 @@
 \title{Example output of whichSignatures()}
 \format{A list of four elements}
 \description{
-A list that was generated from running whichSignatures().  It contains
-the following:
+A list that was generated from running whichSignatures().  It contains the
+following:
 }
 \details{
-\itemize{
-  \item weights - weight of each signature found in the sample
-  \item tumor - tricontext fractions that were used as input
-  \item product - product of the weights by the reference signatures used
-  \item diff - difference between the tumor tricontexts fractions used as input and those generated as the product
-  \item unknown - the fraction of the tumor profile that could not be assigned to a signature
-}
+\itemize{ \item weights - weight of each signature found in the sample \item
+tumor - tricontext fractions that were used as input \item product - product
+of the weights by the reference signatures used \item diff - difference
+between the tumor tricontexts fractions used as input and those generated as
+the product \item unknown - the fraction of the tumor profile that could not
+be assigned to a signature }
 }
 \keyword{datasets}
 

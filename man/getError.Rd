@@ -14,10 +14,12 @@ getError(tumor, signatures, w)
 \item{w}{Weights matrix}
 }
 \value{
-Returns the sum squared error between calculated and actual trinucleotide context fractions
+Returns the sum squared error between calculated and actual
+  trinucleotide context fractions
 }
 \description{
-Finds error between calculated trinucleotide context fractions and inputted ones
+Finds error between calculated trinucleotide context fractions and inputted
+ones
 }
 \keyword{internal}
 

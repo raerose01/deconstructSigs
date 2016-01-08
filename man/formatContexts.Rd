@@ -10,7 +10,8 @@ formatContexts(contexts)
 \item{contexts}{One of the entries in the output list from whichSignatures()}
 }
 \value{
-Returns a data frame with sample.id, full_context, fraction, and mutation as column names
+Returns a data frame with sample.id, full_context, fraction, and
+  mutation as column names
 }
 \description{
 Makes the contexts useable in plotSignatures()

@@ -27,9 +27,9 @@ Rachel Rosenthal rachel.rosenthal.14@ucl.ac.uk
 \examples{
 test = whichSignatures(tumor.ref = randomly.generated.tumors,
                        signatures.ref = signatures,
-                       sample.id = "1",
+                       sample.id = "2",
                        contexts.needed = FALSE,
-                       trimer.counts.loc = tri.counts.exome)                      
+                       trimer.counts.loc = tri.counts.exome)                     
 plotSignatures(example.output, sub = "example")
 makePie(example.output, sub = "example")
 }

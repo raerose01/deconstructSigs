@@ -4,20 +4,16 @@
 \name{sample.mut.ref}
 \alias{sample.mut.ref}
 \title{Example input to mut.to.sigs.input()}
-\format{A data frame of 657 rows and 5 column that contains example mutations which could be used in mut.to.sigs.input()}
+\format{A data frame of 657 rows and 5 column that contains example mutations
+ which could be used in mut.to.sigs.input()}
 \description{
-A data frame containing example mutations that can be used as input to mut.to.sigs.input().
-Data comes from two TCGA LUAD patients (http://cancergenome.nih.gov/) 
-Contains the following columns:
+A data frame containing example mutations that can be used as input to
+mut.to.sigs.input(). Data comes from two TCGA LUAD patients
+(http://cancergenome.nih.gov/) Contains the following columns:
 }
 \details{
-\itemize{
-  \item Sample - sample name
-  \item chr - chromosome number
-  \item pos - chromosome position
-  \item ref - reference base
-  \item alt - alternate base
-}
+\itemize{ \item Sample - sample name \item chr - chromosome number \item pos -
+chromosome position \item ref - reference base \item alt - alternate base }
 }
 \keyword{datasets}
 

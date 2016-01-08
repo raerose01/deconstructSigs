@@ -19,7 +19,8 @@ updateW_GR(tumor, signatures, w, signatures.limit, bound = 100)
 Returns an updated weights matrix
 }
 \description{
-Determines what proportion of what signature, when added to the current weights matrix, results in the lowest sum-squared error
+Determines what proportion of what signature, when added to the current
+weights matrix, results in the lowest sum-squared error
 }
 \keyword{internal}
 

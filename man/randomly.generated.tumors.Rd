@@ -6,8 +6,8 @@
 \title{Values for 100 randomly generated tumor samples}
 \format{A data frame of 100 rows and 96 columns}
 \description{
-A dataset containing the value for the 96-trinucleotide contexts of
-100 randomly generated tumors.
+A dataset containing the value for the 96-trinucleotide contexts of 100
+randomly generated tumors.
 }
 \keyword{datasets}
 

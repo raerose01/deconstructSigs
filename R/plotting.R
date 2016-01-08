@@ -4,7 +4,8 @@
 #' 
 #' @keywords internal
 #' @param contexts One of the entries in the output list from whichSignatures()
-#' @return Returns a data frame with sample.id, full_context, fraction, and mutation as column names
+#' @return Returns a data frame with sample.id, full_context, fraction, and
+#'   mutation as column names
 
 #' @export
 formatContexts = function(contexts){

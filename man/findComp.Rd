@@ -15,7 +15,7 @@ findComp(tri, nr = FALSE)
 Returns a character vector containing the complemented input sequence
 }
 \description{
-Given an input sequence, returns either the reverse complement (default) or
+Given an input sequence, returns either the reverse complement (default) or 
 complement of the sequnce (nr = TRUE)
 }
 \keyword{internal}

@@ -1,10 +1,11 @@
 #' Golden section search
 #' 
-#' Uses golden section method to search given space for value that minimizes function given
+#' Uses golden section method to search given space for value that minimizes
+#' function given
 #' 
 #' @keywords internal
 #' @param f function
-#' @param lower Lower bound to search in 
+#' @param lower Lower bound to search in
 #' @param upper Upper bound to search in
 #' @param tol How exact the answer must be
 #' @return Returns a value that minimizes the function input

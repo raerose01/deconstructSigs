@@ -9,31 +9,33 @@ whichSignatures(tumor.ref = NA, sample.id, signatures.ref = signatures,
   contexts.needed = FALSE, trimer.counts.loc)
 }
 \arguments{
-\item{tumor.ref}{Either a data frame or location of input text file, where rows are samples,
-columns are trinucleotide contexts}
+\item{tumor.ref}{Either a data frame or location of input text file, where
+rows are samples, columns are trinucleotide contexts}
 
 \item{sample.id}{Name of sample -- should be rowname of tumor.ref}
 
-\item{signatures.ref}{Either a data frame or location of signature text file, where rows are
-signatures, columns are trinucleotide contexts}
+\item{signatures.ref}{Either a data frame or location of signature text file,
+where rows are signatures, columns are trinucleotide contexts}
 
-\item{associated}{Vector of associated signatures. If given, will narrow the
+\item{associated}{Vector of associated signatures. If given, will narrow the 
 signatures tested to only the ones listed.}
 
 \item{signatures.limit}{Number of signatures to limit the search to}
 
-\item{signature.cutoff}{Discard any signature contributions with a weight less than this amount}
+\item{signature.cutoff}{Discard any signature contributions with a weight
+less than this amount}
 
-\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is only
-mutation counts}
+\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is
+only mutation counts}
 
-\item{trimer.counts.loc}{Location of counts of trinucleotides in region
+\item{trimer.counts.loc}{Location of counts of trinucleotides in region 
 covered by sequencing. Only required if contexts.needed = TRUE .}
 }
 \value{
 A list of the weights for each signatures, the product when those are
-  multiplied on the signatures, the difference between the tumor sample and
-  product, the tumor sample tricontext distribution given, and the unknown weight.
+  multiplied on the signatures, the difference between the tumor sample and 
+  product, the tumor sample tricontext distribution given, and the unknown
+  weight.
 }
 \description{
 Determines how much of each signature is present in the sample given
@@ -41,7 +43,7 @@ Determines how much of each signature is present in the sample given
 \examples{
 test = whichSignatures(tumor.ref = randomly.generated.tumors, 
                        signatures.ref = signatures, 
-                       sample.id = "1", 
+                       sample.id = "2", 
                        contexts.needed = FALSE,
                        trimer.counts.loc = tri.counts.exome)
 }

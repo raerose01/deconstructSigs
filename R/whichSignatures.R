@@ -4,27 +4,29 @@
 #' 
 #' Determines how much of each signature is present in the sample given
 #' 
-#' @param tumor.ref Either a data frame or location of input text file, where rows are samples,
-#'   columns are trinucleotide contexts
-#' @param sample.id Name of sample -- should be rowname of tumor.ref 
-#' @param signatures.ref Either a data frame or location of signature text file, where rows are
-#'   signatures, columns are trinucleotide contexts
-#' @param associated Vector of associated signatures. If given, will narrow the
+#' @param tumor.ref Either a data frame or location of input text file, where
+#'   rows are samples, columns are trinucleotide contexts
+#' @param sample.id Name of sample -- should be rowname of tumor.ref
+#' @param signatures.ref Either a data frame or location of signature text file,
+#'   where rows are signatures, columns are trinucleotide contexts
+#' @param associated Vector of associated signatures. If given, will narrow the 
 #'   signatures tested to only the ones listed.
 #' @param signatures.limit Number of signatures to limit the search to
-#' @param signature.cutoff Discard any signature contributions with a weight less than this amount
-#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is only
-#'   mutation counts
-#' @param trimer.counts.loc Location of counts of trinucleotides in region
+#' @param signature.cutoff Discard any signature contributions with a weight
+#'   less than this amount
+#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
+#'   only mutation counts
+#' @param trimer.counts.loc Location of counts of trinucleotides in region 
 #'   covered by sequencing. Only required if contexts.needed = TRUE .
 #' @return A list of the weights for each signatures, the product when those are
-#'   multiplied on the signatures, the difference between the tumor sample and
-#'   product, the tumor sample tricontext distribution given, and the unknown weight.
+#'   multiplied on the signatures, the difference between the tumor sample and 
+#'   product, the tumor sample tricontext distribution given, and the unknown
+#'   weight.
 #' @export
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors, 
 #'                        signatures.ref = signatures, 
-#'                        sample.id = "1", 
+#'                        sample.id = "2", 
 #'                        contexts.needed = FALSE,
 #'                        trimer.counts.loc = tri.counts.exome)
 

@@ -1,6 +1,6 @@
 #' Returns complement of a sequence
 #' 
-#' Given an input sequence, returns either the reverse complement (default) or
+#' Given an input sequence, returns either the reverse complement (default) or 
 #' complement of the sequnce (nr = TRUE)
 #' 
 #' @keywords internal
@@ -32,19 +32,26 @@ findComp = function(tri, nr = FALSE) {
 
 #' Converts mutation list to correct input format
 #' 
-#' Given a mutation list, outputs a data frame with counts of how frequently a mutation is found 
-#' within each trinucleotide context per sample ID.  Output can be used as input into getTriContextFraction.
+#' Given a mutation list, outputs a data frame with counts of how frequently a
+#' mutation is found within each trinucleotide context per sample ID.  Output
+#' can be used as input into getTriContextFraction.
 #' 
-#' @param mut.ref Location of the mutation file that is to be converted or name of data frame in environment
-#' @param sample.id Column name in the mutation file corresponding to the Sample ID
-#' @param chr Column name in the mutation file corresponding to the chromosome  
-#' @param pos Column name in the mutation file corresponding to the mutation position 
-#' @param ref Column name in the mutation file corresponding to the reference base
-#' @param alt Column name in the mutation file corresponding to the alternate base 
-#' @return A data frame that contains sample IDs for the rows and trinucleotide contexts for the columns. Each entry is the count
-#'  of how many times a mutation with that trinucleotide context is seen in the sample.
+#' @param mut.ref Location of the mutation file that is to be converted or name
+#'   of data frame in environment
+#' @param sample.id Column name in the mutation file corresponding to the Sample
+#'   ID
+#' @param chr Column name in the mutation file corresponding to the chromosome
+#' @param pos Column name in the mutation file corresponding to the mutation
+#'   position
+#' @param ref Column name in the mutation file corresponding to the reference
+#'   base
+#' @param alt Column name in the mutation file corresponding to the alternate
+#'   base
+#' @return A data frame that contains sample IDs for the rows and trinucleotide
+#'   contexts for the columns. Each entry is the count of how many times a
+#'   mutation with that trinucleotide context is seen in the sample.
 #' @examples
-#' sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, 
+#' sigs.input = mut.to.sigs.input(mut.ref = subset(sample.mut.ref, sample.mut.ref$Sample == '1'), 
 #'                                sample.id = "Sample", 
 #'                                chr = "chr", 
 #'                                pos = "pos", 

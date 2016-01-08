@@ -19,7 +19,8 @@ golden.section.search(f, lower, upper, tol = 1e-06)
 Returns a value that minimizes the function input
 }
 \description{
-Uses golden section method to search given space for value that minimizes function given
+Uses golden section method to search given space for value that minimizes
+function given
 }
 \keyword{internal}
 

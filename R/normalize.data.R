@@ -1,6 +1,3 @@
-# example data file: "~/Documents/SwantonLab-Desktop/Projects/signatures/package/example.txt"
-# example trimer counts: "~/Dropbox/SwantonLab/Values/SureSelectV4.bed.tri.counts.noUn.condensed.txt"
-
 #' Normalizes trinucleotide contexts
 #' 
 #' Normalizes the trinucleotide contexts
@@ -19,14 +16,18 @@ norm.it <- function(col, trimer.counts){
 
 #' Calculates trinucleotide context fraction
 #' 
-#' Determines trinucleotide context fraction from a mutation counts list.
-#' Given a data frame or .txt file or mutation counts with columns as trincucleotide contexts in the form A[C>A]A and the rows as sample id's
-#' and a data frame or .txt file of the times each tri nucleotide context is seen in the sequencing region with the rows in the format ACA,
-#' the function returns a data frame of the mutation counts normalized by trinucleotide frequency
+#' Determines trinucleotide context fraction from a mutation counts list. Given
+#' a data frame or .txt file or mutation counts with columns as trincucleotide
+#' contexts in the form A[C>A]A and the rows as sample id's and a data frame or
+#' .txt file of the times each tri nucleotide context is seen in the sequencing
+#' region with the rows in the format ACA, the function returns a data frame of
+#' the mutation counts normalized by trinucleotide frequency
 #' 
 #' @keywords internal
-#' @param mut.counts.ref data frame of counts of mutations in each trinucleotide context for each sample or location where .txt file is found
-#' @param trimer.counts.ref data frame of counts of times each trinculeotide context is seen in sequencing area or location where the .txt file is found
+#' @param mut.counts.ref data frame of counts of mutations in each trinucleotide
+#'   context for each sample or location where .txt file is found
+#' @param trimer.counts.ref data frame of counts of times each trinculeotide
+#'   context is seen in sequencing area or location where the .txt file is found
 #' @return Returns the trinucleotide context fraction
 #' @export
 getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
