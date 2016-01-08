@@ -115,3 +115,5 @@ The output from `whichSignatures` can be visualized using the function `makePie`
 makePie(sample_1)
 makePie(sample_2)
 ```
+
+![alt text](inst/extdata/makePie.png)
