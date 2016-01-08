@@ -51,12 +51,14 @@ findComp = function(tri, nr = FALSE) {
 #'   contexts for the columns. Each entry is the count of how many times a
 #'   mutation with that trinucleotide context is seen in the sample.
 #' @examples
-#' sigs.input = mut.to.sigs.input(mut.ref = subset(sample.mut.ref, sample.mut.ref$Sample == '1'), 
+#' \dontrun{
+#' sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.mut.ref, 
 #'                                sample.id = "Sample", 
 #'                                chr = "chr", 
 #'                                pos = "pos", 
 #'                                ref = "ref", 
 #'                                alt = "alt")
+#'}
 #' @export
 mut.to.sigs.input = function(mut.ref, sample.id, chr, pos, ref, alt){
   

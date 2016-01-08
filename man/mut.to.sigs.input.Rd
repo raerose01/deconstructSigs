@@ -35,11 +35,13 @@ mutation is found within each trinucleotide context per sample ID.  Output
 can be used as input into getTriContextFraction.
 }
 \examples{
-sigs.input = mut.to.sigs.input(mut.ref = subset(sample.mut.ref, sample.mut.ref$Sample == '1'), 
+\dontrun{
+sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.mut.ref, 
                                sample.id = "Sample", 
                                chr = "chr", 
                                pos = "pos", 
                                ref = "ref", 
                                alt = "alt")
+}
 }
 
