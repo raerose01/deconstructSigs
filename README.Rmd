@@ -55,7 +55,12 @@ For instance, `sample.mut.ref` contains mutation data for two samples.  Thus the
 head(sample.mut.ref)
 
 # Convert to deconstructSigs input
-sigs.input <- mut.to.sigs.input(mut.ref = sample.mut.ref, sample.id = "Sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt")
+sigs.input <- mut.to.sigs.input(mut.ref = sample.mut.ref, 
+                                sample.id = "Sample", 
+                                chr = "chr", 
+                                pos = "pos", 
+                                ref = "ref", 
+                                alt = "alt")
 ```
 
 ### `whichSignatures()`
@@ -68,7 +73,9 @@ The function `whichSignatures` takes these two inputs (`tumor.ref`, `signatures.
 
 ```{r}
 # Determine the signatures contributing to the two example samples
-test = whichSignatures(tumor.ref = randomly.generated.tumors, signatures.ref = signatures, sample.id = 2)
+test = whichSignatures(tumor.ref = randomly.generated.tumors, 
+                       signatures.ref = signatures, 
+                       sample.id = 2)
 ```
 
 If the input data frame only contains the counts of the mutations observed in each context, as is the case with the output from `mut.to.sigs.input`, then additional parameters must be given to `whichSignatures` to normalize the data.
@@ -79,8 +86,17 @@ For the example used in `mut.to.sigs.input`, the call to `whichSignatures` would
 
 ```{r}
 # Determine the signatures contributing to the two example samples
-sample_1 = whichSignatures(tumor.ref = sigs.input, signatures.ref = signatures, sample.id = 1, contexts.needed = TRUE, trimer.counts.loc = tri.counts.exome)
-sample_2 = whichSignatures(tumor.ref = sigs.input, signatures.ref = signatures, sample.id = 2, contexts.needed = TRUE, trimer.counts.loc = tri.counts.exome)
+sample_1 = whichSignatures(tumor.ref = sigs.input, 
+                           signatures.ref = signatures, 
+                           sample.id = 1, 
+                           contexts.needed = TRUE, 
+                           trimer.counts.loc = tri.counts.exome)
+
+sample_2 = whichSignatures(tumor.ref = sigs.input, 
+                           signatures.ref = signatures, 
+                           sample.id = 2, 
+                           contexts.needed = TRUE, 
+                           trimer.counts.loc = tri.counts.exome)
 ```
 
 Additional parameters to `whichSignatures` are:
