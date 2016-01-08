@@ -35,6 +35,8 @@ formatContexts = function(contexts){
 
 plotSignatures = function(sigs.output, sub = ""){
   
+  op <- par()
+  
   tumor   <- sigs.output[["tumor"]]
   product <- sigs.output[["product"]]
   diff    <- sigs.output[["diff"]]
@@ -83,6 +85,8 @@ plotSignatures = function(sigs.output, sub = ""){
   graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
   graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
   graphics::legend('right', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  
+  on.exit(suppressWarnings(graphics::par(op)))
   
 }
 
