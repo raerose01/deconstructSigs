@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version:
+
+  * all examples run with time < 5s
+
 ## Test environments
  * local OS X install, R 3.2.2
  * win-builder (devel and release)
