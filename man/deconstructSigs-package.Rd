@@ -16,7 +16,7 @@
 Package: \tab deconstructSigs\cr
 Type: \tab Package\cr
 Version: \tab 1.5\cr
-Date: \tab 2015-12-08\cr
+Date: \tab 2016-01-13\cr
 License: \tab GPL (>= 2)\cr
 }
 }
