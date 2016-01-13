@@ -3,5 +3,6 @@
 .Rhistory
 ^cran-comments\.md$
 ^README\.Rmd$
+^README\.pdf$
 ^README-.*\.png$
 .fuse*
