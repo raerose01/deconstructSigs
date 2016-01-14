@@ -32,7 +32,7 @@
 
 whichSignatures = function(tumor.ref = NA, 
                            sample.id, 
-                           signatures.ref = signatures, 
+                           signatures.ref = signatures.nature2013, 
                            associated = c(), 
                            signatures.limit = NA,
                            signature.cutoff = 0.06,
