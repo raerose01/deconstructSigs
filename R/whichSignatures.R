@@ -38,7 +38,7 @@ whichSignatures = function(tumor.ref = NA,
                            signature.cutoff = 0.06,
                            contexts.needed = FALSE, 
                            trimer.counts.loc) {
-  
+    
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
     if(contexts.needed == TRUE){
