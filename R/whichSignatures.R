@@ -25,7 +25,7 @@
 #' @export
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors, 
-#'                        signatures.ref = signatures, 
+#'                        signatures.ref = signatures.nature2013, 
 #'                        sample.id = "2", 
 #'                        contexts.needed = FALSE,
 #'                        trimer.counts.loc = tri.counts.exome)
@@ -59,7 +59,7 @@ whichSignatures = function(tumor.ref = NA,
   tumor <- as.matrix(tumor)
   tumor <- subset(tumor, rownames(tumor) == sample.id)
   if(round(rowSums(tumor), digits = 1) != 1){
-    warning(paste('Sample: ', sample.id, ' is not normalized\n', 'Consider using "contexts.needed = TRUE"', sep = ' '))
+    stop(paste('Sample: ', sample.id, ' is not normalized\n', 'Consider using "contexts.needed = TRUE"', sep = ' '))
   }
   
   #Read in Stratton signatures file  
