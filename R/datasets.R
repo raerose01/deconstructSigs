@@ -20,7 +20,7 @@ NULL
 #' @keywords datasets
 #' @name signatures.nature2013
 #' @format A data frame of 27 rows and 96 columns
-#' @source \url{ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl}
+#' @source ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl
 NULL
 
 #' Published Signatures from Sanger COSMIC
@@ -45,6 +45,18 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @name tri.counts.exome
+#' @format A data frame of 32 rows and 1 column that contains the counts
+NULL
+
+#' The counts of every trinuclotide frequency in a genome
+#' 
+#' A datset containing the number of times each trinucleotide (ex: ACA) is found
+#' in the hg19 genome. Can be used as the
+#' 'trimer.counts.loc' parameter in whichSignatures().
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name tri.counts.genome
 #' @format A data frame of 32 rows and 1 column that contains the counts
 NULL
 
@@ -75,12 +87,12 @@ NULL
 #'\itemize{ \item Sample - sample name \item chr - chromosome number \item pos -
 #'chromosome position \item ref - reference base \item alt - alternate base }
 #'
-#'@docType data
-#'@keywords datasets
-#'@name sample.mut.ref
-#'@format A data frame of 657 rows and 5 column that contains example mutations 
+#' @docType data
+#' @keywords datasets
+#' @name sample.mut.ref
+#' @format A data frame of 657 rows and 5 column that contains example mutations 
 #'  which could be used in mut.to.sigs.input()
-#'@source http://cancergenome.nih.gov/
+#' @source http://cancergenome.nih.gov/
 NULL
 
 
