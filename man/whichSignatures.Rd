@@ -4,9 +4,10 @@
 \alias{whichSignatures}
 \title{Which signatures are present}
 \usage{
-whichSignatures(tumor.ref = NA, sample.id, signatures.ref = signatures,
-  associated = c(), signatures.limit = NA, signature.cutoff = 0.06,
-  contexts.needed = FALSE, trimer.counts.loc)
+whichSignatures(tumor.ref = NA, sample.id,
+  signatures.ref = signatures.nature2013, associated = c(),
+  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = FALSE,
+  trimer.counts.loc)
 }
 \arguments{
 \item{tumor.ref}{Either a data frame or location of input text file, where

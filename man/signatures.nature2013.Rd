@@ -6,7 +6,7 @@
 \title{Published Signatures from Alexandrov et al 2013}
 \format{A data frame of 27 rows and 96 columns}
 \source{
-\url{ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl}
+Nature 2013 PMID:23945592
 }
 \description{
 A dataset containing the published signatures from Alexandrov et al read into
