@@ -2,7 +2,7 @@ Package: deconstructSigs
 Type: Package
 Title: Identifies Signatures Present in a Tumor Sample
 Version: 1.5.0
-Date: 2015-12-08
+Date: 2016-01-14
 Author: Rachel Rosenthal
 Maintainer: Rachel Rosenthal <rachel.rosenthal.14@ucl.ac.uk>
 Description: Takes sample information in the form of the fraction of mutations
