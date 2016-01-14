@@ -7,7 +7,8 @@
 \format{A data frame of 32 rows and 1 column that contains the counts}
 \description{
 A datset containing the number of times each trinucleotide (ex: ACA) is found
-in the exome region captured by sequencing.
+in the exome region captured by sequencing. Can be used as the
+'trimer.counts.loc' parameter in whichSignatures().
 }
 \keyword{datasets}
 

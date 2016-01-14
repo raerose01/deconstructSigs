@@ -9,7 +9,8 @@ plotSignatures(sigs.output, sub = "")
 \arguments{
 \item{sigs.output}{The list output from whichSignatures()}
 
-\item{sub}{A character vector that specifies cancer subtype if wanted}
+\item{sub}{A character vector that specifies cancer subtype for plot title,
+if wanted}
 }
 \value{
 Plots the trinucleotide frequency for the given tumor on the top 

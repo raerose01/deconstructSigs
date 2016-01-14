@@ -9,15 +9,15 @@ makePie(sigs.output, sub = "")
 \arguments{
 \item{sigs.output}{The list output from whichSignatures()}
 
-\item{sub}{A character vector that specifies cancer subtype if wanted}
+\item{sub}{A character vector that specifies cancer subtype for plot title,
+if wanted}
 }
 \value{
-Plots a pie chart of the weights calculated in the given
-tumor sample
+Plots a pie chart of the weights calculated in the given tumor sample
 }
 \description{
-Uses the output from whichSignatures() and creates a pie chart
-of the weights outputted
+Uses the output from whichSignatures() and creates a pie chart of the weights
+outputted
 }
 \examples{
 makePie(example.output)

@@ -4,11 +4,14 @@
 \name{sample.mut.ref}
 \alias{sample.mut.ref}
 \title{Example input to mut.to.sigs.input()}
-\format{A data frame of 657 rows and 5 column that contains example mutations
+\format{A data frame of 657 rows and 5 column that contains example mutations 
  which could be used in mut.to.sigs.input()}
+\source{
+http://cancergenome.nih.gov/
+}
 \description{
-A data frame containing example mutations that can be used as input to
-mut.to.sigs.input(). Data comes from two TCGA LUAD patients
+A data frame containing example mutations that can be used as input to 
+mut.to.sigs.input(). Data comes from two TCGA LUAD patients 
 (http://cancergenome.nih.gov/) Contains the following columns:
 }
 \details{
