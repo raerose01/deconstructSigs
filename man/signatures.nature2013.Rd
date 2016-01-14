@@ -5,13 +5,10 @@
 \alias{signatures.nature2013}
 \title{Published Signatures from Alexandrov et al 2013}
 \format{A data frame of 27 rows and 96 columns}
-\source{
-Nature 2013 PMID:23945592
-}
 \description{
 A dataset containing the published signatures from Alexandrov et al read into
 R as a data frame. Can be used the 'signatures.ref' parameter in
-whichSignatures().
+whichSignatures(). Data obtained: Nature 2013 PMID:23945592
 }
 \keyword{datasets}
 

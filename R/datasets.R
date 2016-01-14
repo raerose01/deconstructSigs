@@ -14,13 +14,12 @@ NULL
 #' 
 #' A dataset containing the published signatures from Alexandrov et al read into
 #' R as a data frame. Can be used the 'signatures.ref' parameter in
-#' whichSignatures().
+#' whichSignatures(). Data obtained: Nature 2013 PMID:23945592
 #' 
 #' @docType data
 #' @keywords datasets
 #' @name signatures.nature2013
 #' @format A data frame of 27 rows and 96 columns
-#' @source Nature 2013 PMID:23945592
 NULL
 
 #' Published Signatures from Sanger COSMIC
@@ -92,7 +91,7 @@ NULL
 #' @name sample.mut.ref
 #' @format A data frame of 657 rows and 5 column that contains example mutations 
 #'  which could be used in mut.to.sigs.input()
-#' @source http://cancergenome.nih.gov/
+#' @source \url{http://cancergenome.nih.gov/}
 NULL
 
 

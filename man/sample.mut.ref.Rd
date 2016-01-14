@@ -7,7 +7,7 @@
 \format{A data frame of 657 rows and 5 column that contains example mutations 
  which could be used in mut.to.sigs.input()}
 \source{
-http://cancergenome.nih.gov/
+\url{http://cancergenome.nih.gov/}
 }
 \description{
 A data frame containing example mutations that can be used as input to 
