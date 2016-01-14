@@ -4,7 +4,7 @@
 #' 
 #' @keywords internal
 #' @param contexts One of the entries in the output list from whichSignatures()
-#' @return Returns a data frame with sample.id, full_context, fraction, and
+#' @return Returns a data frame with sample.id, full_context, fraction, and 
 #'   mutation as column names
 
 #' @export
@@ -25,7 +25,8 @@ formatContexts = function(contexts){
 #' mutational spectrum and the calculated one
 #' 
 #' @param sigs.output The list output from whichSignatures()
-#' @param sub A character vector that specifies cancer subtype if wanted
+#' @param sub A character vector that specifies cancer subtype for plot title,
+#'   if wanted
 #' @return Plots the trinucleotide frequency for the given tumor on the top 
 #'   panel, the calculated one on the middle panel, and the difference between 
 #'   the two on the bottom panel.
@@ -58,6 +59,13 @@ plotSignatures = function(sigs.output, sub = ""){
     }
   }
   
+  if(subtype == ''){
+    top.title <- name
+  }
+  if(subtype != ''){
+    top.title <- paste(name, " -- ", subtype, sep = "")
+  }
+  
   graphics::par(mfrow = c(3,1), xpd = FALSE, mar=c(5, 4, 4, 2), oma=c(0,0,0,4))
   grDevices::palette(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
   
@@ -66,7 +74,7 @@ plotSignatures = function(sigs.output, sub = ""){
   x = graphics::par('usr')
   graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
   graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = paste(name, " -- ", subtype, sep = ""), ylab = 'fraction', add = TRUE)
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
   
   graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
   graphics::box()
@@ -92,13 +100,13 @@ plotSignatures = function(sigs.output, sub = ""){
 
 #' Plots the weights from whichSignatures()
 #' 
-#' Uses the output from whichSignatures() and creates a pie chart
-#' of the weights outputted
+#' Uses the output from whichSignatures() and creates a pie chart of the weights
+#' outputted
 #' 
 #' @param sigs.output The list output from whichSignatures()
-#' @param sub A character vector that specifies cancer subtype if wanted
-#' @return Plots a pie chart of the weights calculated in the given
-#' tumor sample
+#' @param sub A character vector that specifies cancer subtype for plot title,
+#'   if wanted
+#' @return Plots a pie chart of the weights calculated in the given tumor sample
 #' @export
 #' @examples
 #' makePie(example.output)
@@ -135,9 +143,16 @@ makePie <- function(sigs.output, sub = ""){
   # Set up color palette
   sigs.present         <- colnames(weights)
   colors.sigs.present = all.colors$color[match(sigs.present, all.colors$signature)]
-  grDevices::palette(as.character(colors.sigs.present))  
+  grDevices::palette(as.character(colors.sigs.present))
   
-  graphics::pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = paste(rownames(weights), " -- ", sub, sep = ""))
+  if(sub == ''){
+    top.title <- rownames(weights)
+  }
+  if(sub != ''){
+    top.title <- paste(rownames(weights), " -- ", sub, sep = "")
+  }
+  
+  graphics::pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = top.title)
 
 }
 ################################################ 
