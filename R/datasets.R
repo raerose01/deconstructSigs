@@ -20,7 +20,7 @@ NULL
 #' @keywords datasets
 #' @name signatures.nature2013
 #' @format A data frame of 27 rows and 96 columns
-#' @source ftp://ftp.sanger.ac.uk/pub/cancer/AlexandrovEtAl
+#' @source Nature 2013 PMID:23945592
 NULL
 
 #' Published Signatures from Sanger COSMIC
