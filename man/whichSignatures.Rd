@@ -42,7 +42,7 @@ Determines how much of each signature is present in the sample given
 }
 \examples{
 test = whichSignatures(tumor.ref = randomly.generated.tumors, 
-                       signatures.ref = signatures, 
+                       signatures.ref = signatures.nature2013, 
                        sample.id = "2", 
                        contexts.needed = FALSE,
                        trimer.counts.loc = tri.counts.exome)
