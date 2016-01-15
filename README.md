@@ -94,7 +94,6 @@ Additional optional parameters to `whichSignatures` are:
 
 -   `signature.cutoff` -- Discard any signature contributions with a weight less than this amount.
 
-\newpage
 The output of `whichSignatures` is a list of 5 elements:
 
 -   weights -- data frame containing the weights assigned to each of the k signatures of the input signatures matrix
@@ -119,7 +118,6 @@ plotSignatures(sample_2)
 
 ![alt text](inst/extdata/plotSignatures.png)
 
-\newpage
 ### `makePie()`
 
 The output from `whichSignatures` can be visualized using the function `makePie`. This function takes the `whichSignatures` output (`sigs.output`) and an optional identifying parameter (`sub`).
