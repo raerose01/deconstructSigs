@@ -1,7 +1,8 @@
 ## Resubmission
 This is a resubmission. In this version:
 
-  * all examples run with time < 5s
+  * all examples consistently run with time < 5s on my local OS X R
+  * all examples have run with time < 5s on win-builder, however they sometimes and irreproducibly take longer
 
 ## Test environments
  * local OS X install, R 3.2.2
