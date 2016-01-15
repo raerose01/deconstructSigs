@@ -24,8 +24,7 @@
 #'   weight.
 #' @export
 #' @examples
-#' test = whichSignatures(tumor.ref = randomly.generated.tumors, 
-#'                        signatures.ref = signatures.nature2013, 
+#' test = whichSignatures(tumor.ref = randomly.generated.tumors,
 #'                        sample.id = "2", 
 #'                        contexts.needed = FALSE,
 #'                        trimer.counts.loc = tri.counts.exome)
