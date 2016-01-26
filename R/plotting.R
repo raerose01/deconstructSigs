@@ -98,6 +98,53 @@ plotSignatures = function(sigs.output, sub = ""){
   
 }
 
+#' Plots a tumor profile
+#' 
+#' Uses the output from whichSignatures() and creates a plot of the given tumor 
+#' mutational spectrum and the calculated one
+#' 
+#' @param tumor A tumor matrix
+#' @param sub A character vector that specifies cancer subtype for plot title,
+#'   if wanted
+#' @return Plots the trinucleotide frequency for the given tumor
+#' @examples
+#' plotTumor(tumor, sub = "example")
+plotTumor = function(tumor, sub = ""){
+  
+  op <- graphics::par()
+  
+  y_limit        <- 1.2 * max(tumor)
+  tumor_plotting <- formatContexts(tumor)
+  
+  name           <- unique(tumor_plotting$sample.id)
+  subtype        <- sub
+  
+  if(subtype == ''){
+    top.title <- name
+  }
+  if(subtype != ''){
+    top.title <- paste(name, " -- ", subtype, sep = "")
+  }
+  
+  grDevices::palette(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
+  
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+  graphics::box()
+  x = graphics::par('usr')
+  graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+  
+  graphics::legend('topright', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 6, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  
+  #graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
+  #graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+  #graphics::legend('topright', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  
+  on.exit(suppressWarnings(graphics::par(op)))
+
+}
+
 #' Plots the weights from whichSignatures()
 #' 
 #' Uses the output from whichSignatures() and creates a pie chart of the weights
