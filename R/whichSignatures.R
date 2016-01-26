@@ -35,19 +35,20 @@ whichSignatures = function(tumor.ref = NA,
                            associated = c(), 
                            signatures.limit = NA,
                            signature.cutoff = 0.06,
-                           contexts.needed = FALSE, 
-                           trimer.counts.loc) {
+                           contexts.needed = TRUE, 
+                           tri.counts.exome.loc = tri.counts.exome,
+                           tri.counts.genome.loc = tri.counts.genome) {
     
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
     if(contexts.needed == TRUE){
-      tumor   <- getTriContextFraction(mut.counts.ref = tumor, trimer.counts.ref = trimer.counts.loc) 
+      tumor   <- getTriContextFraction(mut.counts.ref = tumor, trimer.counts.exome = tri.counts.exome.loc, trimer.counts.genome = tri.counts.genome.loc) 
     }
   } else {
     if(file.exists(tumor.ref)){
       tumor   <- utils::read.table(tumor.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
       if(contexts.needed == TRUE){
-        tumor <- getTriContextFraction(tumor, trimer.counts.loc) 
+        tumor <- getTriContextFraction(tumor, trimer.counts.exome = tri.counts.exome.loc, trimer.counts.genome = tri.counts.genome.loc) 
       }
     } else {
       print("tumor.ref is neither a file nor a loaded data frame")

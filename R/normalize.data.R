@@ -7,10 +7,9 @@
 #' @param trimer.counts count of the number of times each trimer is found in the area sequenced
 #' @return Returns a normalized column based on the trimer counts
 #' @export
-norm.it <- function(col, trimer.counts){
-  #trimer  <- substr(colnames(col), 1, 3)
+norm.it <- function(col, trimer.ratio){
   trimer  <- paste(substr(colnames(col), 1, 1), substr(colnames(col), 3, 3), substr(colnames(col), 7, 7), sep = "")
-  new.col <- col/trimer.counts[trimer,]
+  new.col <- col*trimer.ratio[trimer,]
   return(new.col)
 }
 
@@ -30,7 +29,7 @@ norm.it <- function(col, trimer.counts){
 #'   context is seen in sequencing area or location where the .txt file is found
 #' @return Returns the trinucleotide context fraction
 #' @export
-getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
+getTriContextFraction <- function(mut.counts.ref, trimer.counts.genome, trimer.counts.exome){
     
   if(exists("mut.counts.ref", mode = "list")){
     mut.counts <- mut.counts.ref
@@ -42,24 +41,37 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.ref){
     }
   }
   
-  if(exists("trimer.counts.ref", mode = "list")){
-    trimer.counts <- trimer.counts.ref
+  if(exists("trimer.counts.genome", mode = "list")){
+    tri.counts.wgs <- trimer.counts.genome
   } else {
-    if(file.exists(trimer.counts.ref)){
-      trimer.counts <- utils::read.table(trimer.counts.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+    if(file.exists(trimer.counts.genome)){
+      tri.counts.wgs <- utils::read.table(trimer.counts.genome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
     } else {
-      print("trimer.counts.ref is neither a file nor a loaded data frame")
+      print("tri.counts.genome is neither a file nor a loaded data frame")
     }
   }
   
-  # divide by trimer count
-  norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.counts = trimer.counts)})
+  if(exists("trimer.counts.exome", mode = "list")){
+    tri.counts.wes <- trimer.counts.exome
+  } else {
+    if(file.exists(trimer.counts.exome)){
+      tri.counts.wes <- utils::read.table(trimer.counts.exome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+    } else {
+      print("tri.counts.exome is neither a file nor a loaded data frame")
+    }
+  }
+  
+  # multiply by WGS/WES tricontext ratio
+  wgs.wes.ratio             <- tri.counts.wgs/tri.counts.wes
+  norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = wgs.wes.ratio)})
   norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
   colnames(norm.mut.counts) <- colnames(mut.counts)
   
   # make each row sum to 1
-  norm.mut.counts           <- apply(norm.mut.counts, 1, function(x) {x/sum(x)})
-  norm.mut.counts           <- t(norm.mut.counts)
+  #norm.mut.counts           <- apply(norm.mut.counts, 1, function(x) {x/sum(x)})
+  #norm.mut.counts           <- t(norm.mut.counts)
+  norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
+
   
   return(norm.mut.counts)
   
