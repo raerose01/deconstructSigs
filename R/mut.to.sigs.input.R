@@ -131,6 +131,8 @@ mut.to.sigs.input = function(mut.ref, sample.id, chr, pos, ref, alt){
     }
   }
   
+  all.tri <- all.tri[order(substr(all.tri, 3, 5))]
+  
   final.matrix = matrix(0, ncol = 96, nrow = length(unique(mut[,sample.id])))
   colnames(final.matrix) = all.tri
   rownames(final.matrix) = unique(mut[,sample.id])
