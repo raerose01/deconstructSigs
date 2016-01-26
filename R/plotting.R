@@ -113,6 +113,8 @@ plotTumor = function(tumor, sub = ""){
   
   op <- graphics::par()
   
+  tumor          <- as.matrix(tumor)
+  
   y_limit        <- 1.2 * max(tumor)
   tumor_plotting <- formatContexts(tumor)
   
