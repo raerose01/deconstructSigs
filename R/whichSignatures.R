@@ -16,8 +16,10 @@
 #'   less than this amount
 #' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
 #'   only mutation counts
-#' @param trimer.counts.loc Location of counts of trinucleotides in region 
-#'   covered by sequencing. Only required if contexts.needed = TRUE .
+#' @param tri.counts.exome.loc Location of counts of trinucleotides in exome.
+#'   Only required if contexts.needed = TRUE .
+#' @param tri.counts.genome.loc Location of counts of trinucleotides in
+#'   genome. Only required if contexts.needed = TRUE .
 #' @return A list of the weights for each signatures, the product when those are
 #'   multiplied on the signatures, the difference between the tumor sample and 
 #'   product, the tumor sample tricontext distribution given, and the unknown
@@ -26,8 +28,7 @@
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors,
 #'                        sample.id = "2", 
-#'                        contexts.needed = FALSE,
-#'                        trimer.counts.loc = tri.counts.exome)
+#'                        contexts.needed = FALSE)
 
 whichSignatures = function(tumor.ref = NA, 
                            sample.id, 
@@ -36,8 +37,8 @@ whichSignatures = function(tumor.ref = NA,
                            signatures.limit = NA,
                            signature.cutoff = 0.06,
                            contexts.needed = TRUE, 
-                           tri.counts.exome.loc = tri.counts.exome,
-                           tri.counts.genome.loc = tri.counts.genome) {
+                           tri.counts.exome.loc = NULL,
+                           tri.counts.genome.loc = NULL) {
     
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref

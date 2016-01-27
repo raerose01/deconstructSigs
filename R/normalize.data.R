@@ -41,39 +41,88 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.genome, trimer.c
     }
   }
   
-  if(exists("trimer.counts.genome", mode = "list")){
-    tri.counts.wgs <- trimer.counts.genome
-  } else {
-    if(file.exists(trimer.counts.genome)){
-      tri.counts.wgs <- utils::read.table(trimer.counts.genome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
-    } else {
-      print("tri.counts.genome is neither a file nor a loaded data frame")
-    }
+  # if both inputs are NULL, return mut counts that sum to 1
+  if(is.null(trimer.counts.genome) & is.null(trimer.counts.exome)){
+    # make each row sum to 1
+    norm.mut.counts           <- mut.counts/rowSums(mut.counts)
+    return(norm.mut.counts)
   }
   
-  if(exists("trimer.counts.exome", mode = "list")){
-    tri.counts.wes <- trimer.counts.exome
-  } else {
-    if(file.exists(trimer.counts.exome)){
-      tri.counts.wes <- utils::read.table(trimer.counts.exome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+  # if only trimer.counts.exome is NULL, return mut counts divided by number of times that trinucleotide context is observed in the genome
+  if(!is.null(trimer.counts.genome) & is.null(trimer.counts.exome)){
+    if(exists("trimer.counts.genome", mode = "list")){
+      tri.counts.wgs <- trimer.counts.genome
     } else {
-      print("tri.counts.exome is neither a file nor a loaded data frame")
+      if(file.exists(trimer.counts.genome)){
+        tri.counts.wgs <- utils::read.table(trimer.counts.genome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      } else {
+        print("tri.counts.genome is neither a file nor a loaded data frame")
+      }
     }
+    multiplicative.ratio      <- 1/tri.counts.wgs
+    norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = multiplicative.ratio)})
+    norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
+    colnames(norm.mut.counts) <- colnames(mut.counts)
+    
+    # make each row sum to 1
+    norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
+    return(norm.mut.counts)
   }
   
-  # multiply by WGS/WES tricontext ratio
-  wgs.wes.ratio             <- tri.counts.wgs/tri.counts.wes
-  norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = wgs.wes.ratio)})
-  norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
-  colnames(norm.mut.counts) <- colnames(mut.counts)
+  # if only trimer.counts.genome is NULL, return mut counts divided by number of times that trinucleotide context is observed in the exome
+  if(is.null(trimer.counts.genome) & !is.null(trimer.counts.exome)){
+    if(exists("trimer.counts.exome", mode = "list")){
+      tri.counts.wes <- trimer.counts.exome
+    } else {
+      if(file.exists(trimer.counts.exome)){
+        tri.counts.wes <- utils::read.table(trimer.counts.exome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      } else {
+        print("tri.counts.exome is neither a file nor a loaded data frame")
+      }
+    }
+    multiplicative.ratio      <- 1/tri.counts.wes
+    norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = multiplicative.ratio)})
+    norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
+    colnames(norm.mut.counts) <- colnames(mut.counts)
+    
+    # make each row sum to 1
+    norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
+    return(norm.mut.counts)
+  }
   
-  # make each row sum to 1
-  #norm.mut.counts           <- apply(norm.mut.counts, 1, function(x) {x/sum(x)})
-  #norm.mut.counts           <- t(norm.mut.counts)
-  norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
-
-  
-  return(norm.mut.counts)
+  # if neither trimer.counts.genome nor trimer.counts.exome is NULL, use the ratio of WGS/WES to normalize the input data
+  if(!is.null(trimer.counts.genome) & !is.null(trimer.counts.exome)){
+    
+    if(exists("trimer.counts.genome", mode = "list")){
+      tri.counts.wgs <- trimer.counts.genome
+    } else {
+      if(file.exists(trimer.counts.genome)){
+        tri.counts.wgs <- utils::read.table(trimer.counts.genome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      } else {
+        print("tri.counts.genome is neither a file nor a loaded data frame")
+      }
+    }
+    
+    if(exists("trimer.counts.exome", mode = "list")){
+      tri.counts.wes <- trimer.counts.exome
+    } else {
+      if(file.exists(trimer.counts.exome)){
+        tri.counts.wes <- utils::read.table(trimer.counts.exome, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      } else {
+        print("tri.counts.exome is neither a file nor a loaded data frame")
+      }
+    }
+    
+    # multiply by WGS/WES tricontext ratio
+    wgs.wes.ratio             <- tri.counts.wgs/tri.counts.wes
+    norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = wgs.wes.ratio)})
+    norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
+    colnames(norm.mut.counts) <- colnames(mut.counts)
+    
+    # make each row sum to 1
+    norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
+    return(norm.mut.counts)
+  }
   
 }
 

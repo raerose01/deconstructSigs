@@ -60,7 +60,7 @@ findComp = function(tri, nr = FALSE) {
 #'                                alt = "alt")
 #'}
 #' @export
-mut.to.sigs.input = function(mut.ref, sample.id, chr, pos, ref, alt){
+mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = 'pos', ref = 'ref', alt = 'alt'){
   
   if(exists("mut.ref", mode = "list")){
     mut.full <- mut.ref

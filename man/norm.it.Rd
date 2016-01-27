@@ -4,7 +4,7 @@
 \alias{norm.it}
 \title{Normalizes trinucleotide contexts}
 \usage{
-norm.it(col, trimer.counts)
+norm.it(col, trimer.ratio)
 }
 \arguments{
 \item{col}{column names}

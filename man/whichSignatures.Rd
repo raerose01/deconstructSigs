@@ -6,8 +6,8 @@
 \usage{
 whichSignatures(tumor.ref = NA, sample.id,
   signatures.ref = signatures.nature2013, associated = c(),
-  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = FALSE,
-  trimer.counts.loc)
+  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = TRUE,
+  tri.counts.exome.loc = NULL, tri.counts.genome.loc = NULL)
 }
 \arguments{
 \item{tumor.ref}{Either a data frame or location of input text file, where
@@ -29,8 +29,11 @@ less than this amount}
 \item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is
 only mutation counts}
 
-\item{trimer.counts.loc}{Location of counts of trinucleotides in region 
-covered by sequencing. Only required if contexts.needed = TRUE .}
+\item{tri.counts.exome.loc}{Location of counts of trinucleotides in exome.
+Only required if contexts.needed = TRUE .}
+
+\item{tri.counts.genome.loc}{Location of counts of trinucleotides in
+genome. Only required if contexts.needed = TRUE .}
 }
 \value{
 A list of the weights for each signatures, the product when those are
@@ -44,7 +47,6 @@ Determines how much of each signature is present in the sample given
 \examples{
 test = whichSignatures(tumor.ref = randomly.generated.tumors,
                        sample.id = "2", 
-                       contexts.needed = FALSE,
-                       trimer.counts.loc = tri.counts.exome)
+                       contexts.needed = FALSE)
 }
 

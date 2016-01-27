@@ -4,7 +4,8 @@
 \alias{mut.to.sigs.input}
 \title{Converts mutation list to correct input format}
 \usage{
-mut.to.sigs.input(mut.ref, sample.id, chr, pos, ref, alt)
+mut.to.sigs.input(mut.ref, sample.id = "Sample", chr = "chr", pos = "pos",
+  ref = "ref", alt = "alt")
 }
 \arguments{
 \item{mut.ref}{Location of the mutation file that is to be converted or name

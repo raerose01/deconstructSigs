@@ -107,8 +107,10 @@ plotSignatures = function(sigs.output, sub = ""){
 #' @param sub A character vector that specifies cancer subtype for plot title,
 #'   if wanted
 #' @return Plots the trinucleotide frequency for the given tumor
+#' @export
 #' @examples
-#' plotTumor(tumor, sub = "example")
+#' plotTumor(example.output[['tumor']], sub = "example")
+
 plotTumor = function(tumor, sub = ""){
   
   op <- graphics::par()
