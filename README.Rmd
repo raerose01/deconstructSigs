@@ -107,7 +107,7 @@ sample_1 = whichSignatures(tumor.ref = sigs.input,
                            tri.counts.genome.loc = tri.counts.genome)
 ```
 
-If both parameters are given, normalization is done to reflect the absolute frequency of each trinucleotide context as it would occur across the whole genome. Thus the count data for each trinucleotide context is multiplied by a ratio of that trinucleotide's occurence in the genome to the trinucleotide's occurence in the exome. 
+If both parameters are given, normalization is performed to reflect the absolute frequency of each trinucleotide context as it would occur across the whole genome. Thus the count data for each trinucleotide context is multiplied by a ratio of that trinucleotide's occurence in the genome to the trinucleotide's occurence in the exome. 
 
 ```{r}
 # Determine the signatures contributing to the two example samples
@@ -127,6 +127,8 @@ sample_2 = whichSignatures(tumor.ref = sigs.input,
 ```
 
 Included with the package is `tri.counts.exome`, which contains the trinucleotide counts for an exome and `tri.counts.genome`, which contains the trinucleotide counts for the hg19 genome.
+
+The method of normalization chosen should match how the input signatures were normalized.
 
 #### `Optional parameters to whichSignatures()`
 
