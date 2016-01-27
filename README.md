@@ -65,11 +65,13 @@ test = whichSignatures(tumor.ref = randomly.generated.tumors,
                        sample.id = 2)
 ```
 
-If the input data frame only contains the counts of the mutations observed in each context, as is the case with the output from `mut.to.sigs.input`, then additional parameters must be given to `whichSignatures` to normalize the data.
+#### `A bit about normalization`
 
-In these cases, the value of `contexts.needed` should be TRUE and `trimer.counts.loc` parameter should be used to point to the location of a file containing the number of times each trinucleotide context is found in the sequencing region or a loaded data frame with this information. Included with the package is `tri.counts.exome`, which contains the trinucleotide counts for an exome and `tri.counts.genome`, which contains the trinucleotide counts for the hg19 genome.
+If the input data frame only contains the counts of the mutations observed in each context, as is the case with the output from `mut.to.sigs.input`, then the data frame must be normalized. In these cases, the value of `contexts.needed` should be TRUE. An error will be raised if each row of the input data frame does not sum to 1.
 
-For the example used in `mut.to.sigs.input`, the call to `whichSignatures` would look as follows:
+Two additional parameters to `whichSignatures` dictate how any further normalization is done. By default these parameters, `tri.counts.exome.loc` and `tri.counts.genome.loc`, are set to NULL.
+
+If only `tri.counts.exome.loc` is given, the input data frame is normalized by number of times each trinucleotide context is observed in the exome.
 
 ``` r
 # Determine the signatures contributing to the two example samples
@@ -77,14 +79,42 @@ sample_1 = whichSignatures(tumor.ref = sigs.input,
                            signatures.ref = signatures.nature2013, 
                            sample.id = 1, 
                            contexts.needed = TRUE, 
-                           trimer.counts.loc = tri.counts.exome)
+                           tri.counts.exome.loc = tri.counts.exome)
+```
+
+If only `tri.counts.genome.loc` is given, the input data frame is normalized by number of times each trinucleotide context is observed in the genome.
+
+``` r
+# Determine the signatures contributing to the two example samples
+sample_1 = whichSignatures(tumor.ref = sigs.input, 
+                           signatures.ref = signatures.nature2013, 
+                           sample.id = 1, 
+                           contexts.needed = TRUE, 
+                           tri.counts.genome.loc = tri.counts.genome)
+```
+
+If both parameters are given, normalization is done to reflect the absolute frequency of each trinucleotide context as it would occur across the whole genome. Thus the count data for each trinucleotide context is multiplied by a ratio of that trinucleotide's occurence in the genome to the trinucleotide's occurence in the exome.
+
+``` r
+# Determine the signatures contributing to the two example samples
+sample_1 = whichSignatures(tumor.ref = sigs.input, 
+                           signatures.ref = signatures.nature2013, 
+                           sample.id = 1, 
+                           contexts.needed = TRUE, 
+                           tri.counts.exome.loc = tri.counts.exome,
+                           tri.counts.genome.loc = tri.counts.genome)
 
 sample_2 = whichSignatures(tumor.ref = sigs.input, 
                            signatures.ref = signatures.nature2013, 
                            sample.id = 2, 
                            contexts.needed = TRUE, 
-                           trimer.counts.loc = tri.counts.exome)
+                           tri.counts.exome.loc = tri.counts.exome,
+                           tri.counts.genome.loc = tri.counts.genome)
 ```
+
+Included with the package is `tri.counts.exome`, which contains the trinucleotide counts for an exome and `tri.counts.genome`, which contains the trinucleotide counts for the hg19 genome.
+
+#### `Optional parameters to whichSignatures()`
 
 Additional optional parameters to `whichSignatures` are:
 
@@ -93,6 +123,8 @@ Additional optional parameters to `whichSignatures` are:
 -   `signatures.limit` -- Number of signatures to limit the search to.
 
 -   `signature.cutoff` -- Discard any signature contributions with a weight less than this amount.
+
+#### `Output from whichSignatures()`
 
 The output of `whichSignatures` is a list of 5 elements:
 
