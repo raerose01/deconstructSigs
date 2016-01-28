@@ -4,13 +4,16 @@
 \alias{makePie}
 \title{Plots the weights from whichSignatures()}
 \usage{
-makePie(sigs.output, sub = "")
+makePie(sigs.output, sub = "", add.color = NULL)
 }
 \arguments{
 \item{sigs.output}{The list output from whichSignatures()}
 
-\item{sub}{A character vector that specifies cancer subtype for plot title,
+\item{sub}{A character vector that specifies cancer subtype for plot title, 
 if wanted}
+
+\item{add.color}{Optional character vector to assign additional colors for
+novel signatures}
 }
 \value{
 Plots a pie chart of the weights calculated in the given tumor sample

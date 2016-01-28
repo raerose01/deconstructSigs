@@ -155,13 +155,15 @@ plotTumor = function(tumor, sub = ""){
 #' outputted
 #' 
 #' @param sigs.output The list output from whichSignatures()
-#' @param sub A character vector that specifies cancer subtype for plot title,
+#' @param sub A character vector that specifies cancer subtype for plot title, 
 #'   if wanted
+#' @param add.color Optional character vector to assign additional colors for
+#'   novel signatures
 #' @return Plots a pie chart of the weights calculated in the given tumor sample
 #' @export
 #' @examples
 #' makePie(example.output)
-makePie <- function(sigs.output, sub = ""){
+makePie <- function(sigs.output, sub = "", add.color = NULL){
   
   weights              <- data.frame(sigs.output[["weights"]])
   unknown              <- sigs.output[["unknown"]]
@@ -169,20 +171,24 @@ makePie <- function(sigs.output, sub = ""){
   weights$unknown      <- unknown
   
   # Set up all the colors possible
-  #all.sigs             <- colnames(weights)
-  all.sigs             <- c("Signature.1A", "Signature.1B", "Signature.2",  "Signature.3", "Signature.4",  
+  all.sigs             <- c("Signature.1", "Signature.1A", "Signature.1B", "Signature.2",  "Signature.3", "Signature.4",  
                             "Signature.5", "Signature.6", "Signature.7", "Signature.8", "Signature.9",  
                             "Signature.10", "Signature.11", "Signature.12", "Signature.13", "Signature.14", 
                             "Signature.15", "Signature.16", "Signature.17", "Signature.18", "Signature.19", 
                             "Signature.20", "Signature.21", "Signature.R1", "Signature.R2", "Signature.R3",
-                            "Signature.U1", "Signature.U2", "unknown")
+                            "Signature.U1", "Signature.U2","Signature.22", "Signature.23", "Signature.24",
+                            "Signature.25", "Signature.26", "Signature.27", "Signature.28", "Signature.29", "Signature.30",
+                            "unknown")
 
-  all.colors           <- c("#023FA5","#7D87B9","#BEC1D4","#D6BCC0","#BB7784",
-                            "#FFFFCC","#4A6FE3","#8595E1","#B5BBE3","#E6AFB9",
+  all.colors           <- c("#023FA5", "#023FA5","#7D87B9","#BEC1D4","#D6BCC0","#BB7784",
+                            "gold","#4A6FE3","#8595E1","#B5BBE3","#E6AFB9",
                             "#E07B91","#D33F6A","#11C638","#8DD593","#C6DEC7",
                             "#EAD3C6","#F0B98D","#EF9708","#0FCFC0","#9CDED6",
                             "#D5EAE7","#F3E1EB","#F6C4E1","#F79CD4","#866097",
-                            "#008941","#A30059","#706563")
+                            "#008941","#A30059","#F6C4E1","#F79CD4","#866097",
+                            "#008941","#A30059","#008080","#8B0000","#F4A460","#663399",
+                            "#706563")
+
   
   all.colors           <- cbind(as.data.frame(all.sigs), as.data.frame(all.colors))
   colnames(all.colors) <- c("signature", "color")
@@ -191,8 +197,19 @@ makePie <- function(sigs.output, sub = ""){
   ind                  <- which(weights > 0)
   weights              <- weights[,ind]
   
+  missing.colors       <- colnames(weights)[!colnames(weights) %in% all.colors$signature]
+  if(!is.null(add.color)){
+    tmp <- data.frame(missing.colors, add.color)
+    colnames(tmp) = c('signature', 'color')
+    all.colors <- rbind(all.colors, tmp)
+  }
+  
   # Set up color palette
   sigs.present         <- colnames(weights)
+  missing.colors       <- sigs.present[!sigs.present %in% all.colors$signature]
+  if(length(missing.colors) > 0){
+    warning(paste('No color assigned for: \n',  paste(missing.colors, collapse = ',\ '), '.\nTo assign one, use add.color parameter.', sep = ''))
+  }
   colors.sigs.present = all.colors$color[match(sigs.present, all.colors$signature)]
   grDevices::palette(as.character(colors.sigs.present))
   
