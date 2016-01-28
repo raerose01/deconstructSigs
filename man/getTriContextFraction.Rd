@@ -4,7 +4,7 @@
 \alias{getTriContextFraction}
 \title{Calculates trinucleotide context fraction}
 \usage{
-getTriContextFraction(mut.counts.ref, trimer.counts.genome, trimer.counts.exome)
+getTriContextFraction(mut.counts.ref, trimer.counts.method)
 }
 \arguments{
 \item{mut.counts.ref}{data frame of counts of mutations in each trinucleotide

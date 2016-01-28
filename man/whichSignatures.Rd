@@ -6,11 +6,11 @@
 \usage{
 whichSignatures(tumor.ref = NA, sample.id,
   signatures.ref = signatures.nature2013, associated = c(),
-  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = TRUE,
-  tri.counts.exome.loc = NULL, tri.counts.genome.loc = NULL)
+  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = FALSE,
+  tri.counts.method = "default")
 }
 \arguments{
-\item{tumor.ref}{Either a data frame or location of input text file, where
+\item{tumor.ref}{Either a data frame or location of input text file, where 
 rows are samples, columns are trinucleotide contexts}
 
 \item{sample.id}{Name of sample -- should be rowname of tumor.ref}
@@ -23,22 +23,20 @@ signatures tested to only the ones listed.}
 
 \item{signatures.limit}{Number of signatures to limit the search to}
 
-\item{signature.cutoff}{Discard any signature contributions with a weight
+\item{signature.cutoff}{Discard any signature contributions with a weight 
 less than this amount}
 
-\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is
+\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is 
 only mutation counts}
 
-\item{tri.counts.exome.loc}{Location of counts of trinucleotides in exome.
-Only required if contexts.needed = TRUE .}
-
-\item{tri.counts.genome.loc}{Location of counts of trinucleotides in
-genome. Only required if contexts.needed = TRUE .}
+\item{tri.counts.method}{Set to either 'default', 'exome', 'genome',
+'exome2genome', or a data frame containing user defined scaling factor for
+each trinucleotide context (eg ACA).}
 }
 \value{
 A list of the weights for each signatures, the product when those are
   multiplied on the signatures, the difference between the tumor sample and 
-  product, the tumor sample tricontext distribution given, and the unknown
+  product, the tumor sample tricontext distribution given, and the unknown 
   weight.
 }
 \description{

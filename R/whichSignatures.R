@@ -4,7 +4,7 @@
 #' 
 #' Determines how much of each signature is present in the sample given
 #' 
-#' @param tumor.ref Either a data frame or location of input text file, where
+#' @param tumor.ref Either a data frame or location of input text file, where 
 #'   rows are samples, columns are trinucleotide contexts
 #' @param sample.id Name of sample -- should be rowname of tumor.ref
 #' @param signatures.ref Either a data frame or location of signature text file,
@@ -12,17 +12,16 @@
 #' @param associated Vector of associated signatures. If given, will narrow the 
 #'   signatures tested to only the ones listed.
 #' @param signatures.limit Number of signatures to limit the search to
-#' @param signature.cutoff Discard any signature contributions with a weight
+#' @param signature.cutoff Discard any signature contributions with a weight 
 #'   less than this amount
-#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
+#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is 
 #'   only mutation counts
-#' @param tri.counts.exome.loc Location of counts of trinucleotides in exome.
-#'   Only required if contexts.needed = TRUE .
-#' @param tri.counts.genome.loc Location of counts of trinucleotides in
-#'   genome. Only required if contexts.needed = TRUE .
+#' @param tri.counts.method Set to either 'default', 'exome', 'genome',
+#'   'exome2genome', or a data frame containing user defined scaling factor for
+#'   each trinucleotide context (eg ACA).
 #' @return A list of the weights for each signatures, the product when those are
 #'   multiplied on the signatures, the difference between the tumor sample and 
-#'   product, the tumor sample tricontext distribution given, and the unknown
+#'   product, the tumor sample tricontext distribution given, and the unknown 
 #'   weight.
 #' @export
 #' @examples
@@ -36,20 +35,19 @@ whichSignatures = function(tumor.ref = NA,
                            associated = c(), 
                            signatures.limit = NA,
                            signature.cutoff = 0.06,
-                           contexts.needed = TRUE, 
-                           tri.counts.exome.loc = NULL,
-                           tri.counts.genome.loc = NULL) {
+                           contexts.needed = FALSE, 
+                           tri.counts.method = "default") {
     
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
     if(contexts.needed == TRUE){
-      tumor   <- getTriContextFraction(mut.counts.ref = tumor, trimer.counts.exome = tri.counts.exome.loc, trimer.counts.genome = tri.counts.genome.loc) 
+      tumor   <- getTriContextFraction(mut.counts.ref = tumor, trimer.counts.method = tri.counts.method) 
     }
   } else {
     if(file.exists(tumor.ref)){
       tumor   <- utils::read.table(tumor.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
       if(contexts.needed == TRUE){
-        tumor <- getTriContextFraction(tumor, trimer.counts.exome = tri.counts.exome.loc, trimer.counts.genome = tri.counts.genome.loc) 
+        tumor <- getTriContextFraction(tumor, trimer.counts.method = tri.counts.method) 
       }
     } else {
       print("tumor.ref is neither a file nor a loaded data frame")
