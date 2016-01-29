@@ -16,14 +16,30 @@
 #'   less than this amount
 #' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is 
 #'   only mutation counts
-#' @param tri.counts.method Set to either 'default', 'exome', 'genome',
-#'   'exome2genome', or a data frame containing user defined scaling factor for
-#'   each trinucleotide context (eg ACA).
+#' @param tri.counts.method Set to either:
+#' \itemize{
+#'  \item 'default' -- no further normalization \item 'exome' -- normalized by
+#'   number of times each trinucleotide context is observed in the exome \item
+#'   'genome' -- normalized by number of times each trinucleotide context is
+#'   observed in the genome \item 'exome2genome' -- multiplied by a ratio of that
+#'   trinucleotide's occurence in the genome to the trinucleotide's occurence in
+#'   the exome \item data frame containing user defined scaling factor -- count
+#'   data for each trinucleotide context is multiplied by the corresponding value
+#'   given in the data frame }
 #' @return A list of the weights for each signatures, the product when those are
 #'   multiplied on the signatures, the difference between the tumor sample and 
 #'   product, the tumor sample tricontext distribution given, and the unknown 
 #'   weight.
 #' @export
+#' @section Normalization: If the input data frame only contains the counts of
+#'   the mutations observed in each context, then the data frame must be
+#'   normalized. In these cases, the value of `contexts.needed` should be TRUE.
+#'   \cr The parameter, `tri.counts.method`, determines any additional
+#'   normalization performed. Any user provided data frames should match the
+#'   format of `tri.counts.exome` and `tri.counts.genome`. \cr The method of
+#'   normalization chosen should match how the input signatures were normalized.
+#'   For exome data, the default method is appropriate for the signatures
+#'   included in this package.
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors,
 #'                        sample.id = "2", 
@@ -37,7 +53,11 @@ whichSignatures = function(tumor.ref = NA,
                            signature.cutoff = 0.06,
                            contexts.needed = FALSE, 
                            tri.counts.method = "default") {
-    
+  
+  if(class(tumor.ref) == 'matrix'){
+    stop(paste('Input tumor.ref needs to be a data frame or location of input text file', sep = ''))
+  }
+  
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
     if(contexts.needed == TRUE){
@@ -56,6 +76,9 @@ whichSignatures = function(tumor.ref = NA,
   
   # Take patient id given
   tumor <- as.matrix(tumor)
+  if(!sample.id %in% rownames(tumor)){
+    stop(paste(sample.id, " not found in rownames of tumor.ref", sep = ''))
+  }
   tumor <- subset(tumor, rownames(tumor) == sample.id)
   if(round(rowSums(tumor), digits = 1) != 1){
     stop(paste('Sample: ', sample.id, ' is not normalized\n', 'Consider using "contexts.needed = TRUE"', sep = ' '))
