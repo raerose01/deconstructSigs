@@ -136,7 +136,7 @@ plot_example <- whichSignatures(tumor.ref = randomly.generated.tumors,
 plotSignatures(plot_example, sub = 'example')
 ```
 
-![alt text](inst/extdata/plotSignatures2.png)
+![alt text](inst/extdata/plotSignatures.png)
 
 ### `makePie()`
 
@@ -144,7 +144,7 @@ The output from `whichSignatures` can be visualized using the function `makePie`
 
 ``` r
 # Plot output
-makePie(plot_example)
+makePie(plot_example, sub = 'example')
 ```
 
-![alt text](inst/extdata/makePie2.png)
+![alt text](inst/extdata/makePie.png)
