@@ -59,7 +59,7 @@ Two signatures matrices of k rows and 96 columns are also supplied as data in th
 The function `whichSignatures` takes these two inputs (`tumor.ref`, `signatures.ref`) and uses an iterative approach to determine weights to assign to each signature in order to best recontruct the mutational profile of the input tumor sample.
 
 ``` r
-# Determine the signatures contributing to the two example samples
+# Determine the signatures contributing an already normalized sample
 test = whichSignatures(tumor.ref = randomly.generated.tumors, 
                        signatures.ref = signatures.nature2013, 
                        sample.id = 2)
@@ -127,12 +127,16 @@ The output of `whichSignatures` is a list of 5 elements:
 The output from `whichSignatures` can be visualized using the function `plotSignatures`. This function takes the `whichSignatures` output (`sigs.output`) and an optional identifying parameter (`sub`).
 
 ``` r
+# Plot example
+plot_example <- whichSignatures(tumor.ref = randomly.generated.tumors, 
+                       signatures.ref = signatures.nature2013, 
+                       sample.id = 13)
+
 # Plot output
-plotSignatures(sample_1)
-plotSignatures(sample_2)
+plotSignatures(plot_example, sub = 'example')
 ```
 
-![alt text](inst/extdata/plotSignatures.png)
+![alt text](inst/extdata/plotSignatures2.png)
 
 ### `makePie()`
 
@@ -140,8 +144,7 @@ The output from `whichSignatures` can be visualized using the function `makePie`
 
 ``` r
 # Plot output
-makePie(sample_1)
-makePie(sample_2)
+makePie(plot_example)
 ```
 
-![alt text](inst/extdata/makePie.png)
+![alt text](inst/extdata/makePie2.png)
