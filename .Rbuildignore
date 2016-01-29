@@ -6,3 +6,4 @@
 ^README\.pdf$
 ^README-.*\.png$
 .fuse*
+.nfs*
