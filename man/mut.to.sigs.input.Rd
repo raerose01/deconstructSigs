@@ -37,7 +37,7 @@ can be used as input into getTriContextFraction.
 }
 \examples{
 \dontrun{
-sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.mut.ref, 
+sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, 
                                sample.id = "Sample", 
                                chr = "chr", 
                                pos = "pos", 

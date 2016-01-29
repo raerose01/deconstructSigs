@@ -52,7 +52,7 @@ findComp = function(tri, nr = FALSE) {
 #'   mutation with that trinucleotide context is seen in the sample.
 #' @examples
 #' \dontrun{
-#' sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.mut.ref, 
+#' sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, 
 #'                                sample.id = "Sample", 
 #'                                chr = "chr", 
 #'                                pos = "pos", 
