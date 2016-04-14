@@ -1,35 +1,3 @@
-#' Returns complement of a sequence
-#' 
-#' Given an input sequence, returns either the reverse complement (default) or 
-#' complement of the sequnce (nr = TRUE)
-#' 
-#' @keywords internal
-#' @param tri Character vector of "A", "G", "C", or "T"
-#' @param nr If TRUE returns only the complement of the input sequence
-#' @return Returns a character vector containing the complemented input sequence
-#' @export
-findComp = function(tri, nr = FALSE) {
-  pos=c("A","G","C","T")
-  neg=c("T","C","G","A")
-  tm=strsplit(tri,"")[[1]]
-  out=c()
-  for(i in 1:length(tm)) {
-    if(tm[i] == "A"| tm[i] == "C"| tm[i] == "G"| tm[i] == "T"){
-      ind=grep(tm[i],pos)
-      out=c(out,neg[ind])
-    }
-    else{out=c(out,tm[i])} 
-  }
-  if(nr == FALSE){
-    out=paste(rev(out),sep="",collapse="")
-  }
-  if(nr == TRUE){
-    out=paste(out,sep="",collapse="")
-  }
-  return(out)
-}
-
-
 #' Converts mutation list to correct input format
 #' 
 #' Given a mutation list, outputs a data frame with counts of how frequently a
@@ -62,6 +30,7 @@ findComp = function(tri, nr = FALSE) {
 #' @export
 mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = 'pos', ref = 'ref', alt = 'alt'){
   
+  # print(paste("[", date(), "]", "Reading data"))
   if(exists("mut.ref", mode = "list")){
     mut.full <- mut.ref
   } else {
@@ -81,40 +50,36 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   mut$mut.lengths <- nchar(as.character(mut[,ref]))
   mut             <- mut[which(mut[,ref] %in% c('A', 'T', 'C', 'G') & mut[,alt] %in% c('A', 'T', 'C', 'G')),]
   
+  # print(paste("[", date(), "]", "Adding in context"))
   # Add in context
   mut$context = BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, mut[,chr], mut[,pos]-1, mut[,pos]+1, as.character = T)
   mut$mutcat = paste(mut[,ref], ">", mut[,alt], sep = "")
   
+  # print(paste("[", date(), "]", "Checking reference bases"))
   if(any(substr(mut[,ref], 1, 1) != substr(mut[,'context'], 2, 2))){
     bad = mut[ which(substr(mut[,ref], 1, 1) != substr(mut[,'context'], 2, 2)), ]
     bad = paste(bad[,sample.id], bad[,chr], bad[,pos], bad[,ref], bad[,alt], sep = ':')
     bad = paste(bad, collapse = ',\ ')
     warning(paste('Check ref bases -- not all match context:\n ', bad, sep = ' '))
   }
-  
+
+  # print(paste("[", date(), "]", "Reverse complement the G's and A's - New algorithm"))
   # Reverse complement the G's and A's
-  mut$revmutcat = mut$mutcat
-  mut$revcontext = mut$context
-  
   gind = grep("G",substr(mut$mutcat,1,1))
   tind = grep("A",substr(mut$mutcat,1,1))
   
-  if(length(gind) != 0){
-    for(i in 1:length(gind)){
-      mut$revmutcat[gind[i]]=findComp(mut$mutcat[gind[i]], nr = TRUE)
-      mut$revcontext[gind[i]]=findComp(mut$context[gind[i]])
-    }
-  }
-  
-  if(length(tind) != 0){
-    for(i in 1:length(tind)){
-      mut$revmutcat[tind[i]]=findComp(mut$mutcat[tind[i]], nr = TRUE) 
-      mut$revcontext[tind[i]]=findComp(mut$context[tind[i]])
-    }
-  }
-  
+  mut$std.mutcat = mut$mutcat
+  mut$std.mutcat[c(gind, tind)] <- gsub("G", "g", gsub("C", "c", gsub("T", "t", gsub("A", "a", mut$std.mutcat[c(gind, tind)])))) # to lowercase
+  mut$std.mutcat[c(gind, tind)] <- gsub("g", "C", gsub("c", "G", gsub("t", "A", gsub("a", "T", mut$std.mutcat[c(gind, tind)])))) # complement
+
+  mut$std.context = mut$context
+  mut$std.context[c(gind, tind)] <- gsub("G", "g", gsub("C", "c", gsub("T", "t", gsub("A", "a", mut$std.context[c(gind, tind)])))) # to lowercase
+  mut$std.context[c(gind, tind)] <- gsub("g", "C", gsub("c", "G", gsub("t", "A", gsub("a", "T", mut$std.context[c(gind, tind)])))) # complement
+  mut$std.context[c(gind, tind)] <- sapply(strsplit(mut$std.context[c(gind, tind)], split = ""), function(str) {paste(rev(str), collapse = "")}) # reverse
+
+  # print(paste("[", date(), "]", "Make the tricontext"))
   # Make the tricontext
-  mut$tricontext = paste(substr(mut$revcontext, 1, 1), "[", mut$revmutcat, "]", substr(mut$revcontext, 3, 3), sep = "")
+  mut$tricontext = paste(substr(mut$std.context, 1, 1), "[", mut$std.mutcat, "]", substr(mut$std.context, 3, 3), sep = "")
   
   # Generate all possible trinucleotide contexts
   all.tri = c()
@@ -137,6 +102,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   colnames(final.matrix) = all.tri
   rownames(final.matrix) = unique(mut[,sample.id])
   
+  # print(paste("[", date(), "]", "Fill in the context matrix"))
   for(i in unique(mut[,sample.id])){
     tmp = subset(mut, mut[,sample.id] == i)
     beep = table(tmp$tricontext)
@@ -147,6 +113,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
       }
     }
   }
+  # print(paste("[", date(), "]", "Done"))
   
   final.df = data.frame(final.matrix, check.names = F)
   bad = names(which(rowSums(final.df) <= 50))
