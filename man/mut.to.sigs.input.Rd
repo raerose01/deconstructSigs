@@ -35,6 +35,14 @@ Given a mutation list, outputs a data frame with counts of how frequently a
 mutation is found within each trinucleotide context per sample ID.  Output
 can be used as input into getTriContextFraction.
 }
+\details{
+The context sequence is taken from the BSgenome.Hsapiens.UCSC.hg19::Hsapiens
+object, therefore the coordinates must correspond to the human hg19 assembly,
+the UCSC version of the GRCh37 Homo sapiens assembly. This method will to
+its best to translate chromosome names from other versions of the assembly
+like NCBI or Ensembl. For instance, the following transformation will be
+done: "1" -> "chr1"; "MT" -> "chrM"; "GL000245.1" -> "chrUn_gl000245"; etc.
+}
 \examples{
 \dontrun{
 sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, 
