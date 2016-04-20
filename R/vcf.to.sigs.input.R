@@ -30,31 +30,32 @@ vcf.to.sigs.input <- function(vcf) {
          call. = FALSE)
   }
   
-  # At the moment only hg19 is supported as the mut.sigs.input() method uses the
-  # BSgenome.Hsapiens.UCSC.hg19::Hsapiens to get the context sequence.
-  genome <- "hg19"
-  vcf.data <- VariantAnnotation::readVcf(vcf, genome)
-  
+  gt <- VariantAnnotation::readGT(vcf, nucleotides = TRUE)
+
+  # rownames are in the format chr:position_REF/ALT
+  chr <- sub(":.+", "", rownames(gt))
+  pos <- as.numeric(sub("_.+", "", sub(".+:", "", rownames(gt))))
+  ref <- sub("[/|].+", "", sub(".+_", "", rownames(gt)))
+
   mut <- data.frame()
-  for (sample in VariantAnnotation::samples(VariantAnnotation::header(vcf.data))) {
-    alleles <- sort(unique(unlist(strsplit(as.matrix(VariantAnnotation::geno(vcf.data)$GT[, sample]), "[|/]"))))
-    alleles <- as.numeric(grep("0", alleles, value = T, invert = T))
-    for (allele in alleles) {
-      has.alt.allele = grep(allele, as.matrix(VariantAnnotation::geno(vcf.data)$GT[, sample]))
-      n <- length(has.alt.allele)
-      if (n == 0) {
-        next;
-      }
-      alt.array <- sapply(VariantAnnotation::alt(vcf.data)[has.alt.allele],
-                          FUN = function(x) { return(as.character(x[[allele]])) } )
-      mut <- rbind(mut, data.frame(sample = sample,
-                                   chr = GenomeInfoDb::seqnames(vcf.data)[has.alt.allele],
-                                   pos = BiocGenerics::start(IRanges::ranges(vcf.data))[has.alt.allele],
-                                   ref = as.character(VariantAnnotation::ref(vcf.data))[has.alt.allele],
-                                   alt = alt.array
-      ))
-    }
+  for (sample in colnames(gt)) {
+    a1 <- sub("[/|].+", "", gt[, sample])
+    alt1 <- which(ref != a1)
+    mut <- rbind(mut, data.frame(sample = sample,
+                                 chr = chr[alt1],
+                                 pos = pos[alt1],
+                                 ref = ref[alt1],
+                                 alt = a1[alt1]))
+    a2 <- sub(".+[/|]", "", gt[, sample])
+    alt2 <- which(ref != a2 & a1 != a2)
+    mut <- rbind(mut, data.frame(sample = sample,
+                                 chr = chr[alt2],
+                                 pos = pos[alt2],
+                                 ref = ref[alt2],
+                                 alt = a2[alt2]))
   }
-  
-  return(mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt"))
+
+  sigs <- mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt")
+
+  return(sigs)
 }
