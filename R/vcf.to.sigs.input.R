@@ -30,6 +30,8 @@ vcf.to.sigs.input <- function(vcf) {
          call. = FALSE)
   }
   
+  # At the moment only hg19 is supported as the mut.sigs.input() method uses the
+  # BSgenome.Hsapiens.UCSC.hg19::Hsapiens to get the context sequence.
   genome <- "hg19"
   vcf.data <- VariantAnnotation::readVcf(vcf, genome)
   
@@ -53,6 +55,6 @@ vcf.to.sigs.input <- function(vcf) {
       ))
     }
   }
-  print(mut)
+  
   return(mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt"))
 }
