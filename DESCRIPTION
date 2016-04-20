@@ -19,8 +19,6 @@ Imports:
     graphics,
     utils
 Suggests:
-    BiocGenerics,
-    IRanges,
     VariantAnnotation
 LazyData: yes
 URL: https://github.com/raerose01/deconstructSigs
