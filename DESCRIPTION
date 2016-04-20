@@ -14,9 +14,14 @@ Imports:
     reshape2,
     BSgenome,
     BSgenome.Hsapiens.UCSC.hg19,
+    GenomeInfoDb,
     grDevices,
     graphics,
     utils
+Suggests:
+    BiocGenerics,
+    IRanges,
+    VariantAnnotation
 LazyData: yes
 URL: https://github.com/raerose01/deconstructSigs
 BugReports: https://github.com/raerose01/deconstructSigs/issues
