@@ -6,7 +6,8 @@
 #' 
 #' @param tumor.ref Either a data frame or location of input text file, where 
 #'   rows are samples, columns are trinucleotide contexts
-#' @param sample.id Name of sample -- should be rowname of tumor.ref
+#' @param sample.id Name of sample -- should be rowname of tumor.ref. Optional
+#'   if the tumor.ref contains one single sample
 #' @param signatures.ref Either a data frame or location of signature text file,
 #'   where rows are signatures, columns are trinucleotide contexts
 #' @param associated Vector of associated signatures. If given, will narrow the 
@@ -74,6 +75,9 @@ whichSignatures = function(tumor.ref = NA,
     }
   }  
   
+  if (missing(sample.id) && nrow(tumor) == 1) {
+    sample.id = rownames(tumor)[1]
+  }
   # Take patient id given
   tumor <- as.matrix(tumor)
   if(!sample.id %in% rownames(tumor)){
