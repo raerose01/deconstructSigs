@@ -42,7 +42,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
     mut.full <- mut.ref
   } else {
     if(file.exists(mut.ref)){
-      mut.full <- utils::read.table(mut.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
+      mut.full <- utils::read.table(mut.ref, sep = "\t", header = TRUE, as.is = FALSE, check.names = FALSE)
     } else {
       stop("mut.ref is neither a file nor a loaded data frame")
     }
@@ -54,20 +54,20 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   #mut.lengths <- with(mut, nchar(as.character(mut[,ref])))
   #mut.lengths <- with(mut, nchar(as.character(ref)))
   #mut <- mut[which(mut.lengths == 1),]
-  mut$mut.lengths <- nchar(as.character(mut[,ref]))
-  mut             <- mut[which(mut[,ref] %in% c('A', 'T', 'C', 'G') & mut[,alt] %in% c('A', 'T', 'C', 'G')),]
+  mut$mut.lengths <- nchar(as.character(mut[, ref]))
+  mut             <- mut[which(mut[, ref] %in% c('A', 'T', 'C', 'G') & mut[, alt] %in% c('A', 'T', 'C', 'G')),]
   
   # Fix the chromosome names (in case they come from Ensembl instead of UCSC)
-  levels(mut$chr) <- sub("^([0-9XY])", "chr\\1", levels(mut$chr))
-  levels(mut$chr) <- sub("^MT", "chrM", levels(mut$chr))
-  levels(mut$chr) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut$chr), perl = T)
+  levels(mut[, chr]) <- sub("^([0-9XY])", "chr\\1", levels(mut[, chr]))
+  levels(mut[, chr]) <- sub("^MT", "chrM", levels(mut[, chr]))
+  levels(mut[, chr]) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut[, chr]), perl = T)
   # Remove any entry in chromosomes that do not exist in the BSgenome.Hsapiens.UCSC.hg19::Hsapiens object
-  unknown.regions <- levels(mut$chr)[which(!(levels(mut$chr) %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens)))]
+  unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens)))]
   if (length(unknown.regions) > 0) {
     unknown.regions <- paste(unknown.regions, collapse = ',\ ')
     warning(paste('Check chr names -- not all match BSgenome.Hsapiens.UCSC.hg19::Hsapiens object:\n', unknown.regions, sep = ' '))
+    mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens), ]
   }
-  mut <- mut[mut$chr %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens), ]
   
   # print(paste("[", date(), "]", "Adding in context"))
   # Add in context
