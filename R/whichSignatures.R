@@ -24,7 +24,9 @@
 #'   'genome' -- normalized by number of times each trinucleotide context is
 #'   observed in the genome \item 'exome2genome' -- multiplied by a ratio of that
 #'   trinucleotide's occurence in the genome to the trinucleotide's occurence in
-#'   the exome \item data frame containing user defined scaling factor -- count
+#'   the exome \item 'genome2exome' -- multiplied by a ratio of that
+#'   trinucleotide's occurence in the exome to the trinucleotide's occurence in
+#'   the genome \item data frame containing user defined scaling factor -- count
 #'   data for each trinucleotide context is multiplied by the corresponding value
 #'   given in the data frame }
 #' @return A list of the weights for each signatures, the product when those are
@@ -40,7 +42,8 @@
 #'   format of `tri.counts.exome` and `tri.counts.genome`. \cr The method of
 #'   normalization chosen should match how the input signatures were normalized.
 #'   For exome data, the default method is appropriate for the signatures
-#'   included in this package.
+#'   included in this package. For whole genome data, use the 'genome2exome' method
+#'   to obtain consistent results.
 #' @examples
 #' test = whichSignatures(tumor.ref = randomly.generated.tumors,
 #'                        sample.id = "2", 

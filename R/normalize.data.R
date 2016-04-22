@@ -85,7 +85,7 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.method){
       
       tri.counts.wgs <- tri.counts.genome
       tri.counts.wes <- tri.counts.exome
-  
+      
       # multiply by WGS/WES tricontext ratio
       wgs.wes.ratio             <- tri.counts.wgs/tri.counts.wes
       norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = wgs.wes.ratio)})
@@ -95,15 +95,29 @@ getTriContextFraction <- function(mut.counts.ref, trimer.counts.method){
       # make each row sum to 1
       norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
       return(norm.mut.counts)
-    
-    }
-    
-    if(!trimer.counts.method %in% c('default', 'exome', 'genome', 'exome2genome')){
-      
-      stop(paste(trimer.counts.method, ' is not set to one of the available options (\'default\', \'exome\', \'genome\', \'exome2genome\') and is not a data frame.', sep = ''))
       
     }
     
+    # use the ratio of WES/WGS to normalize the input data
+    if(trimer.counts.method == 'genome2exome'){
+      
+      tri.counts.wes <- tri.counts.exome
+      tri.counts.wgs <- tri.counts.genome
+      
+      # multiply by WGS/WES tricontext ratio
+      wes.wgs.ratio             <- tri.counts.wes/tri.counts.wgs
+      norm.mut.counts           <- sapply(colnames(mut.counts), function(x) {norm.it(mut.counts[,x,drop=F], trimer.ratio = wes.wgs.ratio)})
+      norm.mut.counts           <- data.frame(norm.mut.counts, row.names = rownames(mut.counts))
+      colnames(norm.mut.counts) <- colnames(mut.counts)
+      
+      # make each row sum to 1
+      norm.mut.counts           <- norm.mut.counts/rowSums(norm.mut.counts)
+      return(norm.mut.counts)
+      
+    }
+    
+    stop(paste(trimer.counts.method, ' is not set to one of the available options (\'default\', \'exome\', \'genome\', \'exome2genome\', \'genome2exome\') and is not a data frame.', sep = ''))
+
   }
   
   if(class(trimer.counts.method) %in% c('data.frame', 'matrix')){
