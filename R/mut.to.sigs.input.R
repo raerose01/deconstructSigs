@@ -4,10 +4,10 @@
 #' mutation is found within each trinucleotide context per sample ID.  Output
 #' can be used as input into getTriContextFraction.
 #' 
-#' The context sequence is taken from the BSgenome.Hsapiens.UCSC.hg19::Hsapiens
-#' object, therefore the coordinates must correspond to the human hg19 assembly,
+#' The context sequence is taken from the BSgenome.Hsapiens.UCSC.hg'x'::Hsapiens
+#' object, therefore the coordinates must correspond to the human hg19 (or earlier) assembly,
 #' the UCSC version of the GRCh37 Homo sapiens assembly. This method will to
-#' its best to translate chromosome names from other versions of the assembly
+#' it's best to translate chromosome names from other versions of the assembly
 #' like NCBI or Ensembl. For instance, the following transformation will be
 #' done: "1" -> "chr1"; "MT" -> "chrM"; "GL000245.1" -> "chrUn_gl000245"; etc.
 #'  
@@ -32,10 +32,11 @@
 #'                                chr = "chr", 
 #'                                pos = "pos", 
 #'                                ref = "ref", 
-#'                                alt = "alt")
+#'				  				  alt = "alt",
+#'				 				  bsg =  BSgenome.Hsapiens.UCSC.hg19)
 #'}
 #' @export
-mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = 'pos', ref = 'ref', alt = 'alt'){
+mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = 'pos', ref = 'ref', alt = 'alt',bsg= BSgenome.Hsapiens.UCSC.hg19){
   
   # print(paste("[", date(), "]", "Reading data"))
   if(exists("mut.ref", mode = "list")){
@@ -61,17 +62,21 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   levels(mut[, chr]) <- sub("^([0-9XY])", "chr\\1", levels(mut[, chr]))
   levels(mut[, chr]) <- sub("^MT", "chrM", levels(mut[, chr]))
   levels(mut[, chr]) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut[, chr]), perl = T)
-  # Remove any entry in chromosomes that do not exist in the BSgenome.Hsapiens.UCSC.hg19::Hsapiens object
-  unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens)))]
+
+  # Check if the genome version user wants to use is different to hg19. If yes, use the changed genome version in the code below.
+  # This means that the parameter 'bsg' carries the genome version rather than it being hard-coded below. 
+  # Remove any entry in chromosomes that do not exist in the BSgenome.Hsapiens.UCSC.hg'x'::Hsapiens object
+
+  unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% seqnames(bsg)))]
   if (length(unknown.regions) > 0) {
     unknown.regions <- paste(unknown.regions, collapse = ',\ ')
-    warning(paste('Check chr names -- not all match BSgenome.Hsapiens.UCSC.hg19::Hsapiens object:\n', unknown.regions, sep = ' '))
-    mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens), ]
+    warning(paste('Check chr names -- not all match',bsg,'object:\n', unknown.regions, sep = ' '))
+    mut <- mut[mut[, chr] %in% seqnames(bsg), ]
   }
   
   # print(paste("[", date(), "]", "Adding in context"))
   # Add in context
-  mut$context = BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, mut[,chr], mut[,pos]-1, mut[,pos]+1, as.character = T)
+  mut$context = getSeq(bsg, mut[,chr], mut[,pos]-1, mut[,pos]+1, as.character = T)
   mut$mutcat = paste(mut[,ref], ">", mut[,alt], sep = "")
   
   # print(paste("[", date(), "]", "Checking reference bases"))
