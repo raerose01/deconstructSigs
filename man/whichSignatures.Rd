@@ -60,8 +60,8 @@ Determines how much of each signature is present in the sample given
   normalization performed. Any user provided data frames should match the
   format of `tri.counts.exome` and `tri.counts.genome`. \cr The method of
   normalization chosen should match how the input signatures were normalized.
-  For exome data, the default method is appropriate for the signatures
-  included in this package. For whole genome data, use the 'genome2exome' method
+  For exome data, the 'exome2genome' method is appropriate for the signatures
+  included in this package. For whole genome data, use the 'default' method
   to obtain consistent results.
 }
 \examples{
