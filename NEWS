@@ -1,0 +1,7 @@
+deconstructSigs v1.8.0 (Release date: 2016-07-26)
+==============
+
+Changes:
+
+* Include function to allow for a VCF file as input
+* Add parameter in mut.to.sigs.input to allow for alternative genome versions

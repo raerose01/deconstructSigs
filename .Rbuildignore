@@ -7,3 +7,4 @@
 ^README-.*\.png$
 .fuse*
 .nfs*
+^revdep$
