@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Benchmark with simulated profiles</title>
+
+<script src="Simulated_profiles_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Simulated_profiles_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Simulated_profiles_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Simulated_profiles_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Simulated_profiles_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="Simulated_profiles_files/highlight/default.css"
+      type="text/css" />
+<script src="Simulated_profiles_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="Simulated_profiles_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<script src="Simulated_profiles_files/navigation-1.0/codefolding.js"></script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All</a></li>
+</ul>
+</div>
+
+
+<h1 class="title toc-ignore">Benchmark with simulated profiles</h1>
+
+</div>
+
+
+<p>In this benchmark, we want to investigate possible systematic artifacts using simulated profiles.</p>
+<p>The simulations include all the possible pairs of signatures, mixed at a 70% - 30% ratio in the first section and at a 60% - 40% ratio in the second section. This also includes the cases where both high and low contributions emerge from the same signature, effectively creating a simulated profile from a pure signature.</p>
+<p>For each combination, we will get 20 simulated profiles which are built as a linear combination of the signatures weights multipled by 500 (to simulate 500 mutations), perturbed with a 5% uniform noise and finally rounded up.</p>
+<div id="mix-of-two-signatures" class="section level1">
+<h1>70%/30% mix of two signatures</h1>
+<ul>
+<li>Setting up the global parameters for the simulation.</li>
+</ul>
+<pre class="r"><code># Using the PMID of Rosenthal et al. as a seed.
+set.seed(26899170)
+
+simulated_profiles_70_file &lt;- &quot;simulated_profiles_70.rda&quot;
+signatures.ref&lt;-as.matrix(signatures.nature2013)
+noise_level &lt;- 0.05
+ratio &lt;- 0.7;
+n_sample &lt;- 20</code></pre>
+<ul>
+<li>Building the samples.</li>
+</ul>
+<pre class="r"><code>generate_samples &lt;- function(n_sample, ratio, signatures.ref, noise_level) {
+  ## samples is a data.frame whith one sample per row. Each column is the number of mutations in each context
+  samples &lt;- data.frame(matrix(nrow = n_sample * nrow(signatures.ref) * nrow(signatures.ref), ncol = ncol(signatures.ref)))
+  ## sample_s1 is a vector with the first signature used for each sample (row) in the samples DF.
+  sample_s1 &lt;- rep(rep(1:nrow(signatures.ref), each = nrow(signatures.ref)), times = n_sample)
+  ## sample_s1 is a vector with the second signature used for each sample (row) in the samples DF.
+  sample_s2 &lt;- rep(rep(1:nrow(signatures.ref), times = nrow(signatures.ref)), times = n_sample)
+  
+  index &lt;- 1;
+  for (n in 1:n_sample) {
+    for (s1 in 1:nrow(signatures.ref)) {
+      samples[index:(index + nrow(signatures.ref) - 1), ] &lt;-
+        round(
+          runif(ncol(signatures.ref) * nrow(signatures.ref), 1 - noise_level, 1 + noise_level) *
+            500 * t(ratio * signatures.ref[s1, ] + (1 - ratio) * t(signatures.ref)))
+      index &lt;- index + nrow(signatures.ref)
+    }
+  }
+
+  colnames(samples) &lt;- colnames(signatures.ref)
+  rownames(samples) &lt;- 1:nrow(samples)
+
+  theoretical_weights &lt;- matrix(0, nrow = nrow(samples), ncol = nrow(signatures.ref))
+  for (s in 1:nrow(signatures.ref)) {
+    theoretical_weights[which(sample_s1 == s), s] &lt;-
+      theoretical_weights[which(sample_s1 == s), s] + ratio
+  }
+  for (s in 1:nrow(signatures.ref)) {
+    theoretical_weights[which(sample_s2 == s), s] &lt;-
+      theoretical_weights[which(sample_s2 == s), s] + (1 - ratio)
+  }
+  
+  return(list(samples = samples, sample_s1 = sample_s1, sample_s2 = sample_s2,
+              theoretical_weights = theoretical_weights))  
+}</code></pre>
+<pre class="r"><code>samples_list &lt;- generate_samples(n_sample, ratio, signatures.ref, noise_level)
+
+samples &lt;- samples_list[[&quot;samples&quot;]]
+sample_s1 &lt;- samples_list[[&quot;sample_s1&quot;]]
+sample_s2 &lt;- samples_list[[&quot;sample_s2&quot;]]
+theoretical_weights &lt;- samples_list[[&quot;theoretical_weights&quot;]]</code></pre>
+<ul>
+<li>Getting the predicted weights using the deconstructSig package.</li>
+</ul>
+<pre class="r"><code>run_deconstructSigs &lt;- function(samples) {
+  ## DS.weights is a data.frame with the results for each sample. Each row contains
+  ## the imputed weights from the corresponding sample
+  DS.weights &lt;- matrix(nrow = nrow(samples), ncol = nrow(signatures.ref))
+  colnames(DS.weights) &lt;- rownames(signatures.ref)
+  rownames(DS.weights) &lt;- 1:nrow(samples)
+  DS.times &lt;- vector(mode = &quot;numeric&quot;, length = nrow(samples))
+  
+  for (s in 1:nrow(samples)) {
+    sample.start.time &lt;- Sys.time()
+    w &lt;- whichSignatures(tumor.ref = samples,
+                         signatures.ref = signatures.nature2013,
+                         sample.id = s, contexts.needed = TRUE)$weights
+    sample.end.time &lt;- Sys.time()
+    DS.weights[s, ] &lt;- as.matrix(w)
+    DS.times[s] &lt;- difftime(sample.end.time, sample.start.time, units = &quot;secs&quot;)
+  }
+  
+  return(list(DS.weights = DS.weights, DS.times = DS.times))
+}</code></pre>
+<pre class="r"><code>DS.results &lt;- run_deconstructSigs(samples)
+DS.weights &lt;- DS.results[[&quot;DS.weights&quot;]]
+DS.times &lt;- DS.results[[&quot;DS.times&quot;]]
+
+# Save the results in an R object
+simulated_profiles_70 = list(
+  ratio = ratio,
+  n_sample = n_sample,
+  noise_level = noise_level,
+  signatures = signatures.ref,
+  sample_s1 = sample_s1,
+  sample_s2 = sample_s2,
+  theoretical_weights = theoretical_weights,
+  samples = samples,
+  DS.weights = DS.weights,
+  DS.times = DS.times
+)
+save(simulated_profiles_70, file = simulated_profiles_70_file, compress = &quot;bzip2&quot;)</code></pre>
+<ul>
+<li>Functions to generate the plots.</li>
+</ul>
+<pre class="r"><code>## FUNCTION empty_plot creates an empty canvas for each boxplot sub-figure
+empty_plot &lt;- function(title = NA, xlab = NA, ylab = NA) {
+  par(&quot;mar&quot; = c(2, 2, 3, 1))
+  plot(NA, xlim = c(1, 27), ylim = c(0, 103), axes = F, xlab = NA, ylab = NA, main = NA)
+  if (!missing(title)) {
+    title(main = title, line = 1, cex.main = 0.6)
+  }
+  if (!missing(xlab)) {
+    title(xlab = xlab, line = 0.5, cex.lab = 0.6)
+  }
+  if (!missing(ylab)) {
+    title(ylab = ylab, line = 0.7, cex.lab = 0.6)
+  }
+  axis(2, las = 2, lwd = 0, at = c(0, 100 - ratio * 100, ratio * 100, 100), cex.axis = 0.7, line = -1)
+  axis(1, at = 1:27, labels = sub(&quot;Signature.&quot;, &quot;&quot;, rownames(signatures.ref)), las = 2, cex.axis = 0.5, lwd = 0, lwd.ticks = 0, line = -1)
+  abline(h = 0)
+  abline(h = 100)
+  abline(h = ratio * 100, lty = 3)
+  abline(h = 100 - ratio * 100, lty = 3)
+  abline(v = 0:28 + 0.5, lwd = 0.5)
+}
+
+## FUNCTION boxplots creates each boxplot sub-figure (call empty_plot to generate the empty canvas)
+boxplots &lt;- function(s1) {
+  ## First plot where signature s1 is in high proportion
+  if (screen() &gt; 1) {
+    screen(screen() + 1)
+  }
+  empty_plot(title = paste0(ratio * 100, &quot;% of &quot;, rownames(signatures.ref)[s1]),
+             xlab = paste0(&quot; + &quot;, 100 - ratio * 100, &quot;% of this signature&quot;),
+             ylab = paste(&quot;%&quot;, rownames(signatures.ref)[s1]))
+  boxplot(DS.weights[sample_s1 == s1, s1] * 100 ~ sample_s2[sample_s1 == s1],
+          ylim = c(0, 100), pch = 20, cex = 0.3, border = &quot;blue&quot;, boxwex = 0.7, add = T, axes = F)
+
+  ## Second plot where signature s1 is in low proportion
+  screen(screen() + 1)
+  empty_plot(title = paste0(100 - ratio * 100, &quot;% of &quot;, rownames(signatures.ref)[s1]),
+             xlab = paste0(&quot; + &quot;, ratio * 100, &quot;% of this signature&quot;))
+  boxplot(DS.weights[sample_s2 == s1, s1] * 100 ~ sample_s1[sample_s2 == s1],
+          ylim = c(0, 100), pch = 20, cex = 0.3, border = &quot;blue&quot;, boxwex = 0.7, add = T, axes = F)
+
+  ## Third plot where signature s1 is not used, with high proportion of the other signature
+  screen(screen() + 1)
+  empty_plot(title = paste(&quot;No &quot;, rownames(signatures.ref)[s1]),
+             xlab = paste0(ratio * 100, &quot;% of this signature&quot;))
+  boxplot(DS.weights[(sample_s1 != s1 &amp; sample_s2 != s1), s1] * 100 ~
+            factor(sample_s1[(sample_s1 != s1 &amp; sample_s2 != s1)], levels = unique(sample_s1)),
+          ylim = c(0, 100), pch = 20, cex = 0.3, border = &quot;blue&quot;, boxwex = 0.7, add = T, axes = F)
+
+  ## Fourth plot where signature s1 is not used, with low proportion of the other signature
+  screen(screen() + 1)
+  empty_plot(title = paste(&quot;No &quot;, rownames(signatures.ref)[s1]),
+             xlab = paste0(100 - ratio * 100, &quot;% of this signature&quot;))
+  boxplot(DS.weights[(sample_s1 != s1 &amp; sample_s2 != s1), s1] * 100 ~
+            factor(sample_s2[(sample_s1 != s1 &amp; sample_s2 != s1)], levels = unique(sample_s2)),
+          ylim = c(0, 100), pch = 20, cex = 0.3, border = &quot;blue&quot;, boxwex = 0.3, add = T, axes = F)
+}</code></pre>
+<ul>
+<li>Generate the PDF with the results</li>
+</ul>
+<pre class="r"><code>pdf_file &lt;- paste0(&quot;Simulated_profiles_&quot;, ratio * 100, &quot;_&quot;, n_sample, &quot;_&quot;, noise_level * 100, &quot;.pdf&quot;)
+pdf(pdf_file, paper = &quot;a4r&quot;, width = 0, height = 0)
+
+plot(NA, xlim = 0:1, ylim = 0:1,
+     main = paste0(&quot;Benchmark &quot;, 100 * ratio, &quot;% - &quot;, 100 - ratio * 100, &quot;%&quot;),
+     axes = F, xlab = NA, ylab = NA)
+text(0, 0.95, labels = &quot;Parameters:&quot;, pos = 4)
+text(0.02, 0.90, labels = paste0(&quot;-  &quot;, 100 * ratio, &quot;% - &quot;, 100 - ratio * 100, &quot;% pairwise patterns&quot;), pos = 4)
+text(0.02, 0.85, labels = paste0(&quot;-  &quot;, n_sample, &quot; samples for each combination&quot;), pos = 4)
+text(0.02, 0.80, labels = paste0(&quot;-  &quot;, noise_level * 100 , &quot;% uniform noise&quot;), pos = 4)
+text(0, 0.70, labels = &quot;Each row corresponds to a particular signature (27 in total)&quot;, pos = 4)
+text(0, 0.65, labels = &quot;For each signature, there are 4 boxplots showing the contribution of that signature:&quot;, pos = 4)
+text(0.02, 0.60, labels = paste0(&quot;1.  when it forms &quot;, ratio * 100, &quot;% of the simulated pattern, w.r.t. the signature that forms 30% of the pattern&quot;), pos = 4)
+text(0.02, 0.55, labels = paste0(&quot;2.  when it forms &quot;, 100 - ratio * 100, &quot;% of the simulated pattern, w.r.t. the signature that forms 70% of the pattern&quot;), pos = 4)
+text(0.02, 0.50, labels = paste0(&quot;3.  when it is not in the simulated pattern, w.r.t. the signature that forms &quot;, ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0.02, 0.45, labels = paste0(&quot;4.  when it is not in the simulated pattern, w.r.t. the signature that forms &quot;, 100 - ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0, 0.35, labels = &quot;Combinations of high sig.1B and low sig.13 or low sig.R2, or combinations of high sig.5 and low sig.2 or low sig.13 are&quot;, pos = 4)
+text(0, 0.30, labels = &quot;more challenging to decompose. Nearly all other cases behave as expected.&quot;, pos = 4)
+
+# Prints 9 sets (pages) each with 3 rows of 4 plots (1 row per signature)
+for (set in 1:9) {
+  split.screen(c(3, 4))
+  for (s1 in (3*(set-1)+1):(3*(set-1)+3)) {
+    boxplots(s1)
+  }
+  close.screen(all.screens = T)
+}
+dev.off()</code></pre>
+<div id="results" class="section level2 tabset">
+<h2>Results</h2>
+<p>The output is available on <a href="Simulated_profiles_70_20_5.pdf" class="uri">Simulated_profiles_70_20_5.pdf</a>. It shows that combinations of high <code>sig.1B</code> and low <code>sig.13</code> or low <code>sig.R2</code>, combinations of high <code>sig.5</code> and low <code>sig.2</code> or low <code>sig.13</code> are more challenging to decompose.</p>
+<p>You can also see the plots here:</p>
+<pre class="r"><code>## Plot the different tabs. Use results = &#39;asis&#39; to print HTML code, in this case the div and header sections
+## used to create the tabs.
+for (set in 1:9) {
+  cat(paste0(&#39;&lt;div id=&quot;signatures-70-&#39;, set, &#39;&quot; class=&quot;section level3&quot;&gt;
+&lt;h3&gt;Signatures &#39;, paste(sub(&quot;Signature.&quot;, &quot;&quot;, rownames(signatures.ref)[(3*(set-1)+1):(3*(set-1)+3)]), collapse = &quot;/&quot;), &#39;&lt;/h3&gt;&#39;))
+  split.screen(c(3, 4))
+  for (s1 in (3*(set-1)+1):(3*(set-1)+3)) {
+    boxplots(s1)
+  }
+  close.screen(all.screens = T)
+  cat(&#39;&lt;/div&gt;&#39;)
+}</code></pre>
+<div id="signatures-70-1" class="section level3">
+<h3>
+Signatures 1A/1B/2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-1.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-2" class="section level3">
+<h3>
+Signatures 3/4/5
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-2.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-3" class="section level3">
+<h3>
+Signatures 6/7/8
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-3.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-4" class="section level3">
+<h3>
+Signatures 9/10/11
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-4.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-5" class="section level3">
+<h3>
+Signatures 12/13/14
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-5.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-6" class="section level3">
+<h3>
+Signatures 15/16/17
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-6.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-7" class="section level3">
+<h3>
+Signatures 18/19/20
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-7.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-8" class="section level3">
+<h3>
+Signatures 21/R1/R2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-8.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-70-9" class="section level3">
+<h3>
+Signatures R3/U1/U2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-70-9.png" title="" alt="" width="960" />
+</div>
+</div>
+</div>
+<div id="mixture-of-two-signatures" class="section level1">
+<h1>60%/40% mixture of two signatures</h1>
+<ul>
+<li>Setting up the global parameters for the simulation.</li>
+</ul>
+<pre class="r"><code># Using the PMID of Rosenthal et al. as a seed.
+set.seed(26899170)
+
+simulated_profiles_60_file &lt;- &quot;simulated_profiles_60.rda&quot;
+signatures.ref&lt;-as.matrix(signatures.nature2013)
+noise_level &lt;- 0.05
+ratio &lt;- 0.6;
+n_sample &lt;- 20</code></pre>
+<ul>
+<li>Building the samples.</li>
+</ul>
+<pre class="r"><code>samples_list &lt;- generate_samples(n_sample, ratio, signatures.ref, noise_level)
+
+samples &lt;- samples_list[[&quot;samples&quot;]]
+sample_s1 &lt;- samples_list[[&quot;sample_s1&quot;]]
+sample_s2 &lt;- samples_list[[&quot;sample_s2&quot;]]
+theoretical_weights &lt;- samples_list[[&quot;theoretical_weights&quot;]]</code></pre>
+<ul>
+<li>Getting the predicted weights using the deconstructSig package.</li>
+</ul>
+<pre class="r"><code>DS.results &lt;- run_deconstructSigs(samples)
+DS.weights &lt;- DS.results[[&quot;DS.weights&quot;]]
+DS.times &lt;- DS.results[[&quot;DS.times&quot;]]
+
+# Save the results in an R object
+simulated_profiles_60 = list(
+  ratio = ratio,
+  n_sample = n_sample,
+  noise_level = noise_level,
+  signatures = signatures.ref,
+  sample_s1 = sample_s1,
+  sample_s2 = sample_s2,
+  theoretical_weights = theoretical_weights,
+  samples = samples,
+  DS.weights = DS.weights,
+  DS.times = DS.times
+)
+save(simulated_profiles_60, file = simulated_profiles_60_file, compress = &quot;bzip2&quot;)</code></pre>
+<ul>
+<li>Generate the PDF with the results.</li>
+</ul>
+<pre class="r"><code>pdf_file &lt;- paste0(&quot;Simulated_profiles_&quot;, ratio * 100, &quot;_&quot;, n_sample, &quot;_&quot;, noise_level * 100, &quot;.pdf&quot;)
+pdf(pdf_file, paper = &quot;a4r&quot;, width = 0, height = 0)
+
+plot(NA, xlim = 0:1, ylim = 0:1,
+     main = paste0(&quot;Benchmark &quot;, 100 * ratio, &quot;% - &quot;, 100 - ratio * 100, &quot;%&quot;),
+     axes = F, xlab = NA, ylab = NA)
+text(0, 0.95, labels = &quot;Parameters:&quot;, pos = 4)
+text(0.02, 0.90, labels = paste0(&quot;-  &quot;, 100 * ratio, &quot;% - &quot;, 100 - ratio * 100, &quot;% pairwise patterns&quot;), pos = 4)
+text(0.02, 0.85, labels = paste0(&quot;-  &quot;, n_sample, &quot; samples for each combination&quot;), pos = 4)
+text(0.02, 0.80, labels = paste0(&quot;-  &quot;, noise_level * 100 , &quot;% uniform noise&quot;), pos = 4)
+text(0, 0.70, labels = &quot;Each row corresponds to a particular signature (27 in total)&quot;, pos = 4)
+text(0, 0.65, labels = &quot;For each signature, there are 4 boxplots showing the contribution of that signature:&quot;, pos = 4)
+text(0.02, 0.60, labels = paste0(&quot;1.  when it forms &quot;, ratio * 100, &quot;% of the simulated pattern, w.r.t. the signature that forms &quot;, 100 - ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0.02, 0.55, labels = paste0(&quot;2.  when it forms &quot;, 100 - ratio * 100, &quot;% of the simulated pattern, w.r.t. the signature that forms &quot;, ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0.02, 0.50, labels = paste0(&quot;3.  when it is not in the simulated pattern, w.r.t. the signature that forms &quot;, ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0.02, 0.45, labels = paste0(&quot;4.  when it is not in the simulated pattern, w.r.t. the signature that forms &quot;, 100 - ratio * 100, &quot;% of the pattern&quot;), pos = 4)
+text(0, 0.35, labels = &quot;The most challenging cases correspond to the presence of sig.1B or sig.5, especially when combined with sig.13.&quot;, pos = 4)
+text(0, 0.30, labels = &quot;Nearly all other cases behave as expected.&quot;, pos = 4)
+
+# Prints 9 sets (pages) each with 3 rows of 4 plots (1 row per signature)
+for (set in 1:9) {
+  split.screen(c(3, 4))
+  for (s1 in (3*(set-1)+1):(3*(set-1)+3)) {
+    boxplots(s1)
+  }
+  close.screen(all.screens = T)
+}
+dev.off()</code></pre>
+<div id="results-1" class="section level2 tabset">
+<h2>Results</h2>
+<p>The output is available on <a href="Simulated_profiles_60_20_5.pdf" class="uri">Simulated_profiles_60_20_5.pdf</a>. The most challenging cases correspond to the presence of <code>sig.1B</code> or <code>sig.5</code>, especially when combined with <code>sig.13</code>. Nearly all other cases behave as expected.</p>
+<p>You can also see the plots here:</p>
+<div id="signatures-60-1" class="section level3">
+<h3>
+Signatures 1A/1B/2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-1.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-2" class="section level3">
+<h3>
+Signatures 3/4/5
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-2.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-3" class="section level3">
+<h3>
+Signatures 6/7/8
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-3.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-4" class="section level3">
+<h3>
+Signatures 9/10/11
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-4.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-5" class="section level3">
+<h3>
+Signatures 12/13/14
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-5.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-6" class="section level3">
+<h3>
+Signatures 15/16/17
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-6.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-7" class="section level3">
+<h3>
+Signatures 18/19/20
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-7.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-8" class="section level3">
+<h3>
+Signatures 21/R1/R2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-8.png" title="" alt="" width="960" />
+</div>
+<div id="signatures-60-9" class="section level3">
+<h3>
+Signatures R3/U1/U2
+</h3>
+<img src="Simulated_profiles_files/figure-html/plots-60-9.png" title="" alt="" width="960" />
+</div>
+<hr />
+<p>Last updated: Thu Aug 18 16:24:25 2016</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
