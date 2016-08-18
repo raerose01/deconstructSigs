@@ -14,6 +14,8 @@
 #' This method relies on the VariantAnnotation package to read the VCF file.
 #' 
 #' @param vcf Location of the VCF file that is to be converted
+#' @param bsg Only set if another genome build is required. Must be a BSgenome
+#'   object.
 #' @return A data frame that contains sample IDs for the rows and trinucleotide
 #'   contexts for the columns. Each entry is the count of how many times a
 #'   mutation with that trinucleotide context is seen in the sample.
@@ -22,7 +24,7 @@
 #' sigs.input = vcf.to.sigs.input(vcf = "variants.vcf")
 #'}
 #' @export
-vcf.to.sigs.input <- function(vcf) {
+vcf.to.sigs.input <- function(vcf, bsg = NULL) {
   # Check dependency. Note that BiocGenerics and IRanges are dependencies of VariantAnnotation,
   # so no need to check for these.
   if (!requireNamespace("VariantAnnotation", quietly = TRUE)) {
@@ -54,8 +56,8 @@ vcf.to.sigs.input <- function(vcf) {
                                  ref = ref[alt2],
                                  alt = a2[alt2]))
   }
-
-  sigs <- mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt")
+  
+  sigs <- mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = bsg)
 
   return(sigs)
 }

@@ -4,10 +4,13 @@
 \alias{vcf.to.sigs.input}
 \title{Converts a VCF file to correct input format}
 \usage{
-vcf.to.sigs.input(vcf)
+vcf.to.sigs.input(vcf, bsg = NULL)
 }
 \arguments{
 \item{vcf}{Location of the VCF file that is to be converted}
+
+\item{bsg}{Only set if another genome build is required. Must be a BSgenome
+object.}
 }
 \value{
 A data frame that contains sample IDs for the rows and trinucleotide
