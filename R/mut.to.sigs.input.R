@@ -58,6 +58,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   mut             <- mut[which(mut[, ref] %in% c('A', 'T', 'C', 'G') & mut[, alt] %in% c('A', 'T', 'C', 'G')),]
   
   # Fix the chromosome names (in case they come from Ensembl instead of UCSC)
+  mut[, chr] <- factor(mut[, chr])
   levels(mut[, chr]) <- sub("^([0-9XY])", "chr\\1", levels(mut[, chr]))
   levels(mut[, chr]) <- sub("^MT", "chrM", levels(mut[, chr]))
   levels(mut[, chr]) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut[, chr]), perl = T)
@@ -86,7 +87,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
     unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% GenomeInfoDb::seqnames(bsg)))]
     if (length(unknown.regions) > 0) {
       unknown.regions <- paste(unknown.regions, collapse = ',\ ')
-      warning(paste('Check chr names -- not all match',bsg,'object:\n', unknown.regions, sep = ' '))
+      warning(paste('Check chr names -- not all match',attr(bsg, which = 'pkgname'),'object:\n', unknown.regions, sep = ' '))
       mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(bsg), ]
     }
     # Add in context
