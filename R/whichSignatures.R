@@ -146,6 +146,9 @@ whichSignatures = function(tumor.ref = NA,
     num        <- num + 1
     #print(num)
     error_pre  <- getError(tumor, signatures, w)
+    if(error_pre == 0){
+      break
+    }
     #print(w)
     w          <- updateW_GR(tumor, signatures, w, signatures.limit = signatures.limit)
     error_post <- getError(tumor, signatures, w)
