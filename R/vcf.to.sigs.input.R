@@ -43,18 +43,22 @@ vcf.to.sigs.input <- function(vcf, bsg = NULL) {
   for (sample in colnames(gt)) {
     a1 <- sub("[/|].+", "", gt[, sample])
     alt1 <- which(ref != a1)
-    mut <- rbind(mut, data.frame(sample = sample,
-                                 chr = chr[alt1],
-                                 pos = pos[alt1],
-                                 ref = ref[alt1],
-                                 alt = a1[alt1]))
+    if (length(alt1) > 0) {
+      mut <- rbind(mut, data.frame(sample = sample,
+                                   chr = chr[alt1],
+                                   pos = pos[alt1],
+                                   ref = ref[alt1],
+                                   alt = a1[alt1]))
+    }  
     a2 <- sub(".+[/|]", "", gt[, sample])
     alt2 <- which(ref != a2 & a1 != a2)
-    mut <- rbind(mut, data.frame(sample = sample,
-                                 chr = chr[alt2],
-                                 pos = pos[alt2],
-                                 ref = ref[alt2],
-                                 alt = a2[alt2]))
+    if (length(alt2) > 0) {
+      mut <- rbind(mut, data.frame(sample = sample,
+                                   chr = chr[alt2],
+                                   pos = pos[alt2],
+                                   ref = ref[alt2],
+                                   alt = a2[alt2]))
+    }
   }
   
   sigs <- mut.to.sigs.input(mut.ref = mut, sample.id = "sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = bsg)
