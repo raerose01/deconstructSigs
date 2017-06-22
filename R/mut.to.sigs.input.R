@@ -142,7 +142,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   
   # print(paste("[", date(), "]", "Fill in the context matrix"))
   for(i in unique(mut[,sample.id])){
-    tmp = subset(mut, mut[,sample.id] == i)
+    tmp = mut[which(mut[,sample.id] == i),]
     beep = table(tmp$tricontext)
     for(l in 1:length(beep)){
       trimer = names(beep[l])
