@@ -111,7 +111,7 @@ Finally, if `tri.counts.method` is set to a data frame present in the workspace,
 
 Included with the package are `tri.counts.exome`, which contains the trinucleotide counts for an exome and `tri.counts.genome`, which contains the trinucleotide counts for the hg19 genome. These are the counts used for normalization when `tri.counts.method` is 'exome', 'genome' or 'exome2genome'. Any user provided data frames should match the format of `tri.counts.exome` and `tri.counts.genome`.
 
-The method of normalization chosen should match how the input signatures were normalized. For exome data, the default method is appropriate for the signatures included in this package.
+The method of normalization chosen should match how the input signatures were normalized. For exome data, the exome2genome method is appropriate for the signatures included in this package.
 
 #### `Optional parameters to whichSignatures()`
 
