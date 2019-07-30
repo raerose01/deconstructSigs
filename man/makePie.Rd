@@ -25,4 +25,3 @@ outputted
 \examples{
 makePie(example.output)
 }
-

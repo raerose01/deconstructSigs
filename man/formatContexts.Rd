@@ -17,4 +17,3 @@ Returns a data frame with sample.id, full_context, fraction, and
 Makes the contexts useable in plotSignatures()
 }
 \keyword{internal}
-

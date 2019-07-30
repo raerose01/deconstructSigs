@@ -16,4 +16,3 @@ Returns a newly formatted vector of column names
 Changes the way the column names are formatted from nxn.y to the n[x>y]n format
 }
 \keyword{internal}
-

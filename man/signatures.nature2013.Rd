@@ -14,4 +14,3 @@ R as a data frame. Can be used the 'signatures.ref' parameter in
 whichSignatures(). Data obtained: Nature 2013 PMID:23945592
 }
 \keyword{datasets}
-

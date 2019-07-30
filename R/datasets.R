@@ -36,6 +36,58 @@ NULL
 #' @source \url{http://cancer.sanger.ac.uk/cosmic/signatures}
 NULL
 
+#' Updated SBS Exome Signatures from Sanger COSMIC (May 2019)
+#' 
+#' A dataset containing the additional signatures identified read into R as a 
+#' data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
+#' 
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name signatures.exome.cosmic.v3.may2019
+#' @format A data frame of 65 rows and 96 columns
+#' @source \url{https://www.synapse.org/#!Synapse:syn12009743}
+NULL
+
+#' Updated SBS Genome Signatures from Sanger COSMIC (May 2019)
+#' 
+#' A dataset containing the additional signatures identified read into R as a 
+#' data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
+#' 
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name signatures.genome.cosmic.v3.may2019
+#' @format A data frame of 67 rows and 96 columns
+#' @source \url{https://www.synapse.org/#!Synapse:syn12009743}
+NULL
+
+#' New DBS Signatures from Sanger COSMIC (May 2019)
+#' 
+#' A dataset containing the double base substitution signatures identified read into R as a 
+#' data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
+#' 
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name signatures.dbs.cosmic.v3.may2019
+#' @format A data frame of 11 rows and 78 columns
+#' @source \url{https://www.synapse.org/#!Synapse:syn12009743}
+NULL
+
+#' Table of Possible DBS mutations and their reverse complement
+#' 
+#' A dataset containing the additional signatures identified read into R as a 
+#' data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
+#' 
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name dbs_possible
+#' @format A data frame of 30 rows and 96 columns
+#' @source \url{https://www.synapse.org/#!Synapse:syn12009743}
+NULL
+
 #' The counts of every trinuclotide frequency in an exome
 #' 
 #' A datset containing the number of times each trinucleotide (ex: ACA) is found

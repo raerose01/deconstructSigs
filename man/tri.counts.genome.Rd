@@ -11,4 +11,3 @@ in the hg19 genome. Can be used as the
 'trimer.counts.loc' parameter in whichSignatures().
 }
 \keyword{datasets}
-

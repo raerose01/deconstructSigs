@@ -20,7 +20,7 @@ mutational profile.
   \item \code{\link{makePie}}
   }
 }
+
 \author{
 Rachel Rosenthal rachel.rosenthal.14@ucl.ac.uk
 }
-

@@ -25,4 +25,3 @@ region with the rows in the format ACA, the function returns a data frame of
 the mutation counts normalized by trinucleotide frequency
 }
 \keyword{internal}
-

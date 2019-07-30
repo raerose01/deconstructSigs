@@ -19,4 +19,3 @@ mut.to.sigs.input(). Data comes from two TCGA LUAD patients
 chromosome position \item ref - reference base \item alt - alternate base }
 }
 \keyword{datasets}
-

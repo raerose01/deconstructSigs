@@ -4,8 +4,9 @@
 \alias{mut.to.sigs.input}
 \title{Converts mutation list to correct input format}
 \usage{
-mut.to.sigs.input(mut.ref, sample.id = "Sample", chr = "chr", pos = "pos",
-  ref = "ref", alt = "alt", bsg = NULL)
+mut.to.sigs.input(mut.ref, sample.id = "Sample", chr = "chr",
+  pos = "pos", ref = "ref", alt = "alt", bsg = NULL,
+  sig.type = "SBS", dbs_table = dbs_possible)
 }
 \arguments{
 \item{mut.ref}{Location of the mutation file that is to be converted or name 
@@ -27,6 +28,10 @@ base}
 
 \item{bsg}{Only set if another genome build is required. Must be a BSgenome
 object.}
+
+\item{sig.type}{Are SBS or DBS signatures being used?}
+
+\item{dbs_table}{Possible DBS changes and their reverse complements}
 }
 \value{
 A data frame that contains sample IDs for the rows and trinucleotide 
@@ -52,7 +57,6 @@ the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM";
 \dontrun{
 sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.id = "Sample",
 chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = 
-BSgenome.Hsapiens.UCSC.hg19)
+BSgenome.Hsapiens.UCSC.hg19, sig.type = 'SBS', dbs_table = dbs_possible)
 }
 }
-

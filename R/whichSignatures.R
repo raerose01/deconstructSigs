@@ -62,6 +62,11 @@ whichSignatures = function(tumor.ref = NA,
     stop(paste('Input tumor.ref needs to be a data frame or location of input text file', sep = ''))
   }
   
+  if(ncol(signatures.ref) == 78 & tri.counts.method != 'default'){
+    warning('Using default normalization for DBS signatures')
+    tri.counts.method <- 'default'
+  }
+  
   if(exists("tumor.ref", mode = "list")){
     tumor     <- tumor.ref
     if(contexts.needed == TRUE){

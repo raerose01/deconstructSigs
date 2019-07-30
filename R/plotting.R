@@ -25,6 +25,7 @@ formatContexts = function(contexts){
 #' mutational spectrum and the calculated one
 #' 
 #' @param sigs.output The list output from whichSignatures()
+#' @param sig.type Are SBS or DBS signatures of interest?
 #' @param sub A character vector that specifies cancer subtype for plot title,
 #'   if wanted
 #' @return Plots the trinucleotide frequency for the given tumor on the top 
@@ -32,9 +33,9 @@ formatContexts = function(contexts){
 #'   the two on the bottom panel.
 #' @export
 #' @examples
-#' plotSignatures(example.output, sub = "example")
+#' plotSignatures(example.output, sub = "example", sig.type = 'SBS')
 
-plotSignatures = function(sigs.output, sub = ""){
+plotSignatures = function(sigs.output, sig.type = 'SBS', sub = ""){
   
   op <- graphics::par()
   
@@ -66,33 +67,65 @@ plotSignatures = function(sigs.output, sub = ""){
     top.title <- paste(name, " -- ", subtype, sep = "")
   }
   
-  graphics::par(mfrow = c(3,1), xpd = FALSE, mar=c(5, 4, 4, 2), oma=c(0,0,0,4))
-  grDevices::palette(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
+  if(sig.type == 'SBS'){
+    graphics::par(mfrow = c(3,1), xpd = FALSE, mar=c(5, 4, 4, 2), oma=c(0,0,0,4))
+    grDevices::palette(c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"))
+    
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+    
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(product_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
+    
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(diff_plotting$mutation), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
+    
+    graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
+    graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+    graphics::legend('right', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  }
   
-  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
-  graphics::box()
-  x = graphics::par('usr')
-  graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
-  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
-  
-  graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
-  graphics::box()
-  x = graphics::par('usr')
-  graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
-  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-  graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(product_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
-  
-  graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
-  graphics::box()
-  x = graphics::par('usr')
-  graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
-  graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-  graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(diff_plotting$mutation), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
-  
-  graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
-  graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-  graphics::legend('right', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  if(sig.type == 'DBS'){
+    graphics::par(mfrow = c(3,1), xpd = FALSE, mar=c(5, 4, 4, 2), oma=c(0,0,0,4))
+    grDevices::palette(c('#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'))
+    
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(tumor_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+    
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(product_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
+    
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
+    graphics::box()
+    x = graphics::par('usr')
+    graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
+    graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(diff_plotting$full_context,1,2)), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
+    
+    graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
+    graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+    graphics::legend('right', legend = unique(substr(tumor_plotting$full_context,1,2)), bty = 'n', col = c('#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'), ncol = 1, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
+  }
   
   on.exit(suppressWarnings(graphics::par(op)))
   

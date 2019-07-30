@@ -37,4 +37,3 @@ This method relies on the VariantAnnotation package to read the VCF file.
 sigs.input = vcf.to.sigs.input(vcf = "variants.vcf")
 }
 }
-

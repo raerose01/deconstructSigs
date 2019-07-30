@@ -6,8 +6,8 @@
 \usage{
 whichSignatures(tumor.ref = NA, sample.id,
   signatures.ref = signatures.nature2013, associated = c(),
-  signatures.limit = NA, signature.cutoff = 0.06, contexts.needed = FALSE,
-  tri.counts.method = "default")
+  signatures.limit = NA, signature.cutoff = 0.06,
+  contexts.needed = FALSE, tri.counts.method = "default")
 }
 \arguments{
 \item{tumor.ref}{Either a data frame or location of input text file, where 
@@ -64,9 +64,9 @@ Determines how much of each signature is present in the sample given
   included in this package. For whole genome data, use the 'default' method
   to obtain consistent results.
 }
+
 \examples{
 test = whichSignatures(tumor.ref = randomly.generated.tumors,
                        sample.id = "2", 
                        contexts.needed = FALSE)
 }
-

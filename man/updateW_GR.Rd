@@ -23,4 +23,3 @@ Determines what proportion of what signature, when added to the current
 weights matrix, results in the lowest sum-squared error
 }
 \keyword{internal}
-

@@ -8,3 +8,4 @@
 .fuse*
 .nfs*
 ^revdep$
+^tests/*

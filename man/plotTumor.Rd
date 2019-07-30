@@ -22,4 +22,3 @@ mutational spectrum and the calculated one
 \examples{
 plotTumor(example.output[['tumor']], sub = "example")
 }
-

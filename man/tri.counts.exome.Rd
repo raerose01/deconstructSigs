@@ -11,4 +11,3 @@ in the exome region captured by sequencing. Can be used as the
 'trimer.counts.loc' parameter in whichSignatures().
 }
 \keyword{datasets}
-

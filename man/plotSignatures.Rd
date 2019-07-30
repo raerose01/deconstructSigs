@@ -4,10 +4,12 @@
 \alias{plotSignatures}
 \title{Plots the result from whichSignatures()}
 \usage{
-plotSignatures(sigs.output, sub = "")
+plotSignatures(sigs.output, sig.type = "SBS", sub = "")
 }
 \arguments{
 \item{sigs.output}{The list output from whichSignatures()}
+
+\item{sig.type}{Are SBS or DBS signatures of interest?}
 
 \item{sub}{A character vector that specifies cancer subtype for plot title,
 if wanted}
@@ -22,6 +24,5 @@ Uses the output from whichSignatures() and creates a plot of the given tumor
 mutational spectrum and the calculated one
 }
 \examples{
-plotSignatures(example.output, sub = "example")
+plotSignatures(example.output, sub = "example", sig.type = 'SBS')
 }
-

@@ -20,4 +20,3 @@ Determines which single signature results in the lowest sum-squared error and
 uses that as a seed to start from
 }
 \keyword{internal}
-

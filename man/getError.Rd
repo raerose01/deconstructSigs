@@ -22,4 +22,3 @@ Finds error between calculated trinucleotide context fractions and inputted
 ones
 }
 \keyword{internal}
-

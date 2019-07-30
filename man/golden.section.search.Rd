@@ -23,4 +23,3 @@ Uses golden section method to search given space for value that minimizes
 function given
 }
 \keyword{internal}
-

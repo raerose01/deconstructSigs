@@ -18,4 +18,3 @@ Returns a normalized column based on the trimer counts
 Normalizes the trinucleotide contexts
 }
 \keyword{internal}
-
