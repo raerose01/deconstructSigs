@@ -76,21 +76,21 @@ plotSignatures = function(sigs.output, sig.type = 'SBS', sub = ""){
     x = graphics::par('usr')
     graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
     graphics::box()
     x = graphics::par('usr')
     graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(product_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(product_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
     graphics::box()
     x = graphics::par('usr')
     graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(diff_plotting$mutation), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(diff_plotting$mutation), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
     graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
@@ -106,21 +106,21 @@ plotSignatures = function(sigs.output, sig.type = 'SBS', sub = ""){
     x = graphics::par('usr')
     graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(tumor_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+    graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(tumor_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(0, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
     graphics::box()
     x = graphics::par('usr')
     graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(product_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE)
+    graphics::barplot(product_plotting$fraction, names.arg = product_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(product_plotting$full_context,1,2)), ylim = c(0, y_limit), border = NA, space = 0.3, main = c, ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = NA, ylim = c(-y_limit, y_limit), border = NA, xaxt='n', ann=FALSE, yaxt = 'n', space = 0.3)
     graphics::box()
     x = graphics::par('usr')
     graphics::abline(h = seq(from = -y_limit, to = y_limit, by = 0.02), col = '#d3d3d350', lty = 1)
     graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(diff_plotting$full_context,1,2)), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE)
+    graphics::barplot(diff_plotting$fraction, names.arg = diff_plotting$full_context, cex.names = 0.7, las = 2, col = factor(substr(diff_plotting$full_context,1,2)), ylim = c(-y_limit, y_limit), border = 'black', space = 0.3, main = paste("error = ", error_summed, sep = ""), ylab = 'fraction', add = TRUE, ann = TRUE)
     
     graphics::par(fig=c(0,1,0,1), oma = c(1, 1, 1, 1), mar = c(0, 0, 0, 0), new = TRUE)
     graphics::plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
@@ -153,7 +153,7 @@ plotTumor = function(tumor, sub = ""){
   y_limit        <- 1.2 * max(tumor)
   tumor_plotting <- formatContexts(tumor)
   
-  name           <- unique(tumor_plotting$sample.id)
+  name           <- as.character(unique(tumor_plotting$sample.id))
   subtype        <- sub
   
   if(subtype == ''){
@@ -170,7 +170,7 @@ plotTumor = function(tumor, sub = ""){
   x = graphics::par('usr')
   graphics::abline(h = seq(from = 0, to = y_limit, by = 0.01), col = '#d3d3d350', lty = 1)
   graphics::abline(v = seq(from = x[1], to = x[2], by = 1), col = '#d3d3d350', lty = 1)
-  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE)
+  graphics::barplot(tumor_plotting$fraction, names.arg = tumor_plotting$full_context, cex.names = 0.7, las = 2, col = factor(tumor_plotting$mutation), ylim = c(0, y_limit), border = NA, space = 0.3, main = top.title, ylab = 'fraction', add = TRUE, ann = TRUE)
   
   graphics::legend('topright', legend = unique(tumor_plotting$mutation), col = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"), bty = 'n', ncol = 6, inset=c(-0,0), pch = 15, xpd = TRUE, pt.cex = 2.5)
   
@@ -196,7 +196,7 @@ plotTumor = function(tumor, sub = ""){
 #' @export
 #' @examples
 #' makePie(example.output)
-makePie <- function(sigs.output, sub = "", add.color = NULL){
+makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL){
   
   weights              <- data.frame(sigs.output[["weights"]])
   unknown              <- sigs.output[["unknown"]]
@@ -222,13 +222,26 @@ makePie <- function(sigs.output, sub = "", add.color = NULL){
                             "#008941","#A30059","#008080","#8B0000","#F4A460","#663399",
                             "#706563")
 
+  # giving up on color consistency
+  if(v3 == TRUE){
+    all.sigs  <- c(rownames(signatures.exome.cosmic.v3.may2019), rownames(signatures.dbs.cosmic.v3.may2019), 'unknown')
+    tmp_color <- grep('gr(a|e)y', grDevices::colors(), invert = TRUE, value = TRUE)
+    all.colors <- c(tmp_color[c(405, 420, 358, 143, 427, 379, 355, 144, 123, 220,
+                                37, 281, 211, 145, 66, 298, 41, 130, 400, 254, 242,
+                                313, 88, 90, 81, 6, 190, 396, 181, 239, 47, 261, 346, 112,
+                                89, 155, 158, 92, 280, 272, 98, 398, 25, 369, 131, 426, 198,
+                                71, 334, 292, 86, 413, 46, 364, 424, 297, 73, 432, 233, 119,
+                                174, 306, 285, 134, 430, 393, 411, 403, 165, 117, 132, 159,
+                                397, 30, 252, 212)], '#706563')
+  }
+
   
   all.colors           <- cbind(as.data.frame(all.sigs), as.data.frame(all.colors))
   colnames(all.colors) <- c("signature", "color")
   
   # Only include weights that are not 0
-  ind                  <- which(weights > 0)
-  weights              <- weights[,ind]
+  ind                  <- which(weights > 0)  
+  weights              <- weights[,ind,drop=FALSE]
   
   missing.colors       <- colnames(weights)[!colnames(weights) %in% all.colors$signature]
   if(!is.null(add.color)){
@@ -240,12 +253,11 @@ makePie <- function(sigs.output, sub = "", add.color = NULL){
   # Set up color palette
   sigs.present         <- colnames(weights)
   missing.colors       <- sigs.present[!sigs.present %in% all.colors$signature]
-  if(length(missing.colors) > 0){
+  if(length(missing.colors) > 0) {
     warning(paste('No color assigned for: \n',  paste(missing.colors, collapse = ',\ '), '.\nTo assign one, use add.color parameter.', sep = ''))
   }
   colors.sigs.present = all.colors$color[match(sigs.present, all.colors$signature)]
-  grDevices::palette(as.character(colors.sigs.present))
-  
+
   if(sub == ''){
     top.title <- rownames(weights)
   }
@@ -253,8 +265,14 @@ makePie <- function(sigs.output, sub = "", add.color = NULL){
     top.title <- paste(rownames(weights), " -- ", sub, sep = "")
   }
   
-  graphics::pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = top.title)
-
+  if(length(colors.sigs.present) > 1){
+    grDevices::palette(as.character(colors.sigs.present))
+    graphics::pie(t(weights), col = factor(colnames(weights), levels = unique(colnames(weights))), labels = colnames(weights), main = top.title)
+  }
+  
+  if(length(colors.sigs.present) == 1){
+    graphics::pie(t(weights), col = colors.sigs.present, labels = colnames(weights), main = top.title)
+  }
 }
 ################################################ 
 
