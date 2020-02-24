@@ -54,10 +54,12 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   
   # don't need trinucleotide context if looking for DBS
   if(sig.type == 'DBS'){
+    mut[,ref] <- as.character(mut[,ref])
+    mut[,alt] <- as.character(mut[,alt])
     mut <- mut[which(nchar(mut[, ref]) ==2 & nchar(mut[,alt]) == 2),]
     mut$dbs <- paste(mut[,ref], mut[,alt], sep = '>') 
     mut$dbs_condensed <- dbs_possible$dbs_condensed[match(mut$dbs, dbs_possible$dbs)]
-    final.df <- as.data.frame.matrix(table(mut$Sample, factor(mut$dbs_condensed, levels = unique(dbs_possible$dbs_condensed))), stringsAsFactors = FALSE)
+    final.df <- as.data.frame.matrix(table(mut[,sample.id], factor(mut$dbs_condensed, levels = unique(dbs_possible$dbs_condensed))), stringsAsFactors = FALSE)
   }
   
   # And now look at SBS
