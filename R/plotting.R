@@ -43,6 +43,7 @@ plotSignatures = function(sigs.output, sig.type = 'SBS', sub = ""){
   product <- sigs.output[["product"]]
   diff    <- sigs.output[["diff"]]
   weights <- sigs.output[["weights"]]
+  sig_used <- sigs.output[["sig_used"]]
   
   y_limit        <- 1.2 * max(tumor, product)
   tumor_plotting <- formatContexts(tumor)
@@ -196,34 +197,21 @@ plotTumor = function(tumor, sub = ""){
 #' @export
 #' @examples
 #' makePie(example.output)
-makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL){
+makePie <- function(sigs.output, sub = "", add.color = NULL){
   
-  weights              <- data.frame(sigs.output[["weights"]])
-  unknown              <- sigs.output[["unknown"]]
+  weights               <- data.frame(sigs.output[["weights"]])
+  unknown               <- sigs.output[["unknown"]]
+  sig_used              <- sigs.output[["sig_used"]]
   
   weights$unknown      <- unknown
   
   # Set up all the colors possible
-  all.sigs             <- c("Signature.1", "Signature.1A", "Signature.1B", "Signature.2",  "Signature.3", "Signature.4",  
-                            "Signature.5", "Signature.6", "Signature.7", "Signature.8", "Signature.9",  
-                            "Signature.10", "Signature.11", "Signature.12", "Signature.13", "Signature.14", 
-                            "Signature.15", "Signature.16", "Signature.17", "Signature.18", "Signature.19", 
-                            "Signature.20", "Signature.21", "Signature.R1", "Signature.R2", "Signature.R3",
-                            "Signature.U1", "Signature.U2","Signature.22", "Signature.23", "Signature.24",
-                            "Signature.25", "Signature.26", "Signature.27", "Signature.28", "Signature.29", "Signature.30",
-                            "unknown")
-
-  all.colors           <- c("#023FA5", "#023FA5","#7D87B9","#BEC1D4","#D6BCC0","#BB7784",
-                            "gold","#4A6FE3","#8595E1","#B5BBE3","#E6AFB9",
-                            "#E07B91","#D33F6A","#11C638","#8DD593","#C6DEC7",
-                            "#EAD3C6","#F0B98D","#EF9708","#0FCFC0","#9CDED6",
-                            "#D5EAE7","#F3E1EB","#F6C4E1","#F79CD4","#866097",
-                            "#008941","#A30059","#F6C4E1","#F79CD4","#866097",
-                            "#008941","#A30059","#008080","#8B0000","#F4A460","#663399",
-                            "#706563")
-
-  # giving up on color consistency
-  if(v3 == TRUE){
+  # Define colours for v3 sigs
+  if (
+    (sig_used == "signatures.dbs.cosmic.v3.may2019")|
+    (sig_used == "signatures.exome.cosmic.v3.may2019")|
+    (sig_used == "signatures.genome.cosmic.v3.may2019")
+    ){
     all.sigs  <- c(rownames(signatures.exome.cosmic.v3.may2019), rownames(signatures.dbs.cosmic.v3.may2019), 'unknown')
     tmp_color <- grep('gr(a|e)y', grDevices::colors(), invert = TRUE, value = TRUE)
     all.colors <- c(tmp_color[c(405, 420, 358, 143, 427, 379, 355, 144, 123, 220,
@@ -234,8 +222,27 @@ makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL){
                                 174, 306, 285, 134, 430, 393, 411, 403, 165, 117, 132, 159,
                                 397, 30, 252, 212)], '#706563')
   }
+  # Define colours for the non v3 sigs
+  else{
+    all.sigs             <- c("Signature.1", "Signature.1A", "Signature.1B", "Signature.2",  "Signature.3", "Signature.4",  
+                              "Signature.5", "Signature.6", "Signature.7", "Signature.8", "Signature.9",  
+                              "Signature.10", "Signature.11", "Signature.12", "Signature.13", "Signature.14", 
+                              "Signature.15", "Signature.16", "Signature.17", "Signature.18", "Signature.19", 
+                              "Signature.20", "Signature.21", "Signature.R1", "Signature.R2", "Signature.R3",
+                              "Signature.U1", "Signature.U2","Signature.22", "Signature.23", "Signature.24",
+                              "Signature.25", "Signature.26", "Signature.27", "Signature.28", "Signature.29", "Signature.30",
+                              "unknown")
+    
+    all.colors           <- c("#023FA5", "#023FA5","#7D87B9","#BEC1D4","#D6BCC0","#BB7784",
+                              "gold","#4A6FE3","#8595E1","#B5BBE3","#E6AFB9",
+                              "#E07B91","#D33F6A","#11C638","#8DD593","#C6DEC7",
+                              "#EAD3C6","#F0B98D","#EF9708","#0FCFC0","#9CDED6",
+                              "#D5EAE7","#F3E1EB","#F6C4E1","#F79CD4","#866097",
+                              "#008941","#A30059","#F6C4E1","#F79CD4","#866097",
+                              "#008941","#A30059","#008080","#8B0000","#F4A460","#663399",
+                              "#706563")
+  }
 
-  
   all.colors           <- cbind(as.data.frame(all.sigs), as.data.frame(all.colors))
   colnames(all.colors) <- c("signature", "color")
   
@@ -272,6 +279,92 @@ makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL){
   
   if(length(colors.sigs.present) == 1){
     graphics::pie(t(weights), col = colors.sigs.present, labels = colnames(weights), main = top.title)
+  }
+}
+
+makeStackedBar <- function(sigs.output, sub = "", add.color = NULL){
+  
+  weights               <- data.frame(sigs.output[["weights"]])
+  unknown               <- sigs.output[["unknown"]]
+  sig_used              <- sigs.output[["sig_used"]]
+  
+  weights$unknown      <- unknown
+  
+  # Set up all the colors possible
+  # Define colours for v3 sigs
+  if (
+    (sig_used == "signatures.dbs.cosmic.v3.may2019")|
+    (sig_used == "signatures.exome.cosmic.v3.may2019")|
+    (sig_used == "signatures.genome.cosmic.v3.may2019")
+  ){
+    all.sigs  <- c(rownames(signatures.exome.cosmic.v3.may2019), rownames(signatures.dbs.cosmic.v3.may2019), 'unknown')
+    tmp_color <- grep('gr(a|e)y', grDevices::colors(), invert = TRUE, value = TRUE)
+    all.colors <- c(tmp_color[c(405, 420, 358, 143, 427, 379, 355, 144, 123, 220,
+                                37, 281, 211, 145, 66, 298, 41, 130, 400, 254, 242,
+                                313, 88, 90, 81, 6, 190, 396, 181, 239, 47, 261, 346, 112,
+                                89, 155, 158, 92, 280, 272, 98, 398, 25, 369, 131, 426, 198,
+                                71, 334, 292, 86, 413, 46, 364, 424, 297, 73, 432, 233, 119,
+                                174, 306, 285, 134, 430, 393, 411, 403, 165, 117, 132, 159,
+                                397, 30, 252, 212)], '#706563')
+  }
+  # Define colours for the non v3 sigs
+  else{
+    all.sigs             <- c("Signature.1", "Signature.1A", "Signature.1B", "Signature.2",  "Signature.3", "Signature.4",  
+                              "Signature.5", "Signature.6", "Signature.7", "Signature.8", "Signature.9",  
+                              "Signature.10", "Signature.11", "Signature.12", "Signature.13", "Signature.14", 
+                              "Signature.15", "Signature.16", "Signature.17", "Signature.18", "Signature.19", 
+                              "Signature.20", "Signature.21", "Signature.R1", "Signature.R2", "Signature.R3",
+                              "Signature.U1", "Signature.U2","Signature.22", "Signature.23", "Signature.24",
+                              "Signature.25", "Signature.26", "Signature.27", "Signature.28", "Signature.29", "Signature.30",
+                              "unknown")
+    
+    all.colors           <- c("#023FA5", "#023FA5","#7D87B9","#BEC1D4","#D6BCC0","#BB7784",
+                              "gold","#4A6FE3","#8595E1","#B5BBE3","#E6AFB9",
+                              "#E07B91","#D33F6A","#11C638","#8DD593","#C6DEC7",
+                              "#EAD3C6","#F0B98D","#EF9708","#0FCFC0","#9CDED6",
+                              "#D5EAE7","#F3E1EB","#F6C4E1","#F79CD4","#866097",
+                              "#008941","#A30059","#F6C4E1","#F79CD4","#866097",
+                              "#008941","#A30059","#008080","#8B0000","#F4A460","#663399",
+                              "#706563")
+  }
+  
+  all.colors           <- cbind(as.data.frame(all.sigs), as.data.frame(all.colors))
+  colnames(all.colors) <- c("signature", "color")
+  
+  # Only include weights that are not 0
+  ind                  <- which(weights > 0)  
+  weights              <- weights[,ind,drop=FALSE]
+  
+  missing.colors       <- colnames(weights)[!colnames(weights) %in% all.colors$signature]
+  if(!is.null(add.color)){
+    tmp <- data.frame(missing.colors, add.color)
+    colnames(tmp) = c('signature', 'color')
+    all.colors <- rbind(all.colors, tmp)
+  }
+  
+  # Set up color palette
+  sigs.present         <- colnames(weights)
+  missing.colors       <- sigs.present[!sigs.present %in% all.colors$signature]
+  if(length(missing.colors) > 0) {
+    warning(paste('No color assigned for: \n',  paste(missing.colors, collapse = ',\ '), '.\nTo assign one, use add.color parameter.', sep = ''))
+  }
+  colors.sigs.present = all.colors$color[match(sigs.present, all.colors$signature)]
+  
+  if(sub == ''){
+    top.title <- rownames(weights)
+  }
+  if(sub != ''){
+    top.title <- paste(rownames(weights), " -- ", sub, sep = "")
+  }
+  
+  if(length(colors.sigs.present) > 1){
+    grDevices::palette(as.character(colors.sigs.present))
+    graphics::barplot(t(weights), col = factor(colnames(weights)),  main = top.title, legend=colnames(weights))
+    
+  }
+  
+  if(length(colors.sigs.present) == 1){
+    graphics::barplot(t(weights), col = colors.sigs.present, main = top.title)
   }
 }
 ################################################ 
