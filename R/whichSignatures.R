@@ -177,9 +177,9 @@ whichSignatures = function(tumor.ref = NA,
   x       <- data.frame(x)
   x[colnames(weights)] <- weights
   weights <- x
-  
-  out        <- list(weights, tumor, product, diff, unknown)
-  names(out) <- c("weights", "tumor", "product", "diff", "unknown")
+  signatureUsed <- deparse(substitute(signatures.ref))
+  out        <- list(weights, tumor, product, diff, unknown, signatureUsed)
+  names(out) <- c("weights", "tumor", "product", "diff", "unknown", "sig_used")
   return(out)
   
 }
