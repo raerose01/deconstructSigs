@@ -123,7 +123,7 @@ whichSignatures = function(tumor.ref = NA,
   
   #Take a subset of the signatures
   if(!is.null(associated)){
-    signatures <- signatures[rownames(signatures) %in% associated, ]
+    signatures <- signatures[rownames(signatures) %in% associated,,drop=FALSE ]
   }
   
   if(is.na(signatures.limit)){
@@ -132,7 +132,7 @@ whichSignatures = function(tumor.ref = NA,
   
   # Remove signatures from possibilities if they have a "strong" peak not seen in the tumor sample
   zero.contexts   <- colnames(tumor)[tumor < 0.01]
-  corr.sigs       <- which(signatures[,zero.contexts] >= 0.2, arr.ind = T)
+  corr.sigs       <- which(signatures[,zero.contexts,drop=FALSE] >= 0.2, arr.ind = T)
   signatures      <- signatures[which(!rownames(signatures) %in% rownames(corr.sigs)),,drop = FALSE]
   #print(paste(rownames(corr.sigs), " not considered in the analysis.", sep = ""))
   
