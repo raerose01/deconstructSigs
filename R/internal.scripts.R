@@ -105,4 +105,49 @@ updateW_GR = function(tumor, signatures, w, signatures.limit, bound = 100){
   return(w)
 }
 
+#' @title calculate_mutation_probabilities
+#'
+#' @description Calculates probability of a signature resulting in a specific mutation type
+#'
+#' @details Given a signatures data frame and a weights data frame, calculates the probability of each
+#' signature generating each trinucleotide context in the sample.
+#'
+#' @param signatures_df trincucleotide contexts as rows and signatures as columns [data frame]
+#' @param exposures_df samples as rows and signatures as columns [data frame]
+#' @return mmsig output [data frame]
+#' @export
+calculate_mutation_probabilities <- function(signatures_df, exposures_df){
+  
+  if (any(grepl(pattern = ">", x = colnames(signatures_df)))) {
+    signatures_df <- data.frame(t(signatures_df))
+  }
+  
+  if (any(grepl(pattern = "SBS|Signature|DBS", x = colnames(exposures_df)))) {
+    exposures_df <- t(exposures_df)
+  }
+  
+  signatures_used <- as.matrix(signatures_df[,intersect(rownames(exposures_df), 
+                                                        colnames(signatures_df))])
+  exposures_df <- exposures_df[intersect(rownames(exposures_df), 
+                                         colnames(signatures_df)),,drop=FALSE]
+  
+  # this will approximate the mutation matrix I input for each sample
+  genomes <- signatures_used %*% exposures_df
+  
+  boop <- lapply(1:ncol(exposures_df), FUN = function(i){
+    M <- genomes[,i,drop = TRUE]
+    tmp_probs <- sweep(signatures_used, 2, exposures_df[,i], "*")
+    probs <- data.frame(tmp_probs/M)
+    probs$Sample.Names <- colnames(exposures_df)[i]
+    probs$MutationTypes <- rownames(probs)
+    return(probs)
+  })
+  
+  result <- do.call(rbind, boop)
+  result <- data.frame(cbind(result[,c("Sample.Names", "MutationTypes")], result[,1:(ncol(result)-2)]), stringsAsFactors = FALSE)
+  #result <- result %>% dplyr::select(Sample.Names, MutationTypes, everything())
+  return(result)
+  
+}
+
 ################################################

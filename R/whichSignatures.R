@@ -88,6 +88,8 @@ whichSignatures = function(tumor.ref = NA,
   }
   # Take patient id given
   tumor <- as.matrix(tumor)
+  if(is.null(rownames(tumor)))
+    {rownames(tumor) <- 1:nrow(tumor)}
   if(!sample.id %in% rownames(tumor)){
     stop(paste(sample.id, " not found in rownames of tumor.ref", sep = ''))
   }
@@ -178,8 +180,16 @@ whichSignatures = function(tumor.ref = NA,
   x[colnames(weights)] <- weights
   weights <- x
   
-  out        <- list(weights, tumor, product, diff, unknown)
-  names(out) <- c("weights", "tumor", "product", "diff", "unknown")
+  # calculate mutation probabilities
+  # @param signatures_df trincucleotide contexts as rows and signatures as columns [data frame]
+  # @param exposures_df samples as rows and signatures as columns [data frame]
+  
+  mut_probs <- calculate_mutation_probabilities(signatures_df = data.frame(t(signatures)),
+                                                exposures_df = weights[,which(weights>0)])
+  
+  
+  out        <- list(weights, tumor, product, diff, unknown, mut_probs)
+  names(out) <- c("weights", "tumor", "product", "diff", "unknown", "mutation_probability")
   return(out)
   
 }

@@ -51,6 +51,7 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   }
   
   mut <- mut.full[,c(sample.id, chr, pos, ref, alt)]
+  mut[, pos] <- as.numeric(mut[, pos])
   
   # don't need trinucleotide context if looking for DBS
   if(sig.type == 'DBS'){

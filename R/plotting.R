@@ -274,7 +274,251 @@ makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL){
     graphics::pie(t(weights), col = colors.sigs.present, labels = colnames(weights), main = top.title)
   }
 }
-################################################ 
+
+#' @title plot_mutation_probability
+#'
+#' @description Plots the probability each signature contributes
+#' to mutation class
+#'
+#' @param mutation_prob_df calculate_mutation_probabilities output [data frame]
+#' @param color_vector Colors for signatures [character vector]
+#' @param only_top Plot the highest probability per mutation class [Boolean]
+#' @export
+plot_mutation_probability <-
+  function(mutation_prob_df,
+           color_vector = NULL,
+           only_top = FALSE,
+           sample.id = "") {
+    if (is.null(color_vector)) {
+      color_vector <-
+        setNames(
+          c(
+            "#a6cee3",
+            "#1f78b4",
+            "#b2df8a",
+            "#33a02c",
+            "#fb9a99",
+            "#e31a1c",
+            "#fdbf6f",
+            "#cab2d6",
+            "#ffff99"
+          ),
+          c(
+            "Signature.1",
+            "Signature.2",
+            "Signature.5",
+            "Signature.4",
+            "Signature.6",
+            "Signature.7",
+            "Signature.13",
+            "Signature.10",
+            "Signature.11"
+          )
+        )
+    }
+    
+    par(oma = c(1,1,1,1), mar = c(3,4,2,6), xpd = TRUE)
+    
+    plot(
+      x = NA,
+      y = NA,
+      xlim = c(0, 96),
+      ylim = c(0, 1),
+      axes = FALSE,
+      xlab = "trinucleotide",
+      ylab = "Probability",
+      main = sample.id
+    )
+    axis(side = 2,
+         at = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+         las = 1)
+    axis(
+      side = 1,
+      at = 1:96,
+      labels = unique(mutation_prob_df$MutationTypes),
+      las = 2,
+      cex.axis = 0.6
+    )
+    sapply(
+      seq_len(length.out = length(unique(mutation_prob_df$MutationTypes))),
+      FUN = function(x) {
+        tri <- unique(mutation_prob_df$MutationTypes)[x]
+        to_plot <-
+          mutation_prob_df[which(mutation_prob_df$MutationTypes == tri), ]
+        if (only_top) {
+          to_plot <- to_plot[order(to_plot$mean, decreasing = TRUE), ][1, ]
+        }
+        #x_pos <- jitter(rep(x, nrow(to_plot)))
+        x_pos <- rep(x, nrow(to_plot))
+        cols <- color_vector[to_plot[, c("signature")]]
+        points(
+          y = to_plot[, c("mean")],
+          x = x_pos,
+          pch = 16,
+          col = cols
+        )
+        sapply(
+          seq_len(length.out = nrow(to_plot)),
+          FUN = function(y) {
+            segments(
+              x0 = x_pos[y],
+              x1 = x_pos[y],
+              y0 = to_plot[y, c("CI025")],
+              y1 = to_plot[y, c("CI975")],
+              col = color_vector[to_plot$signature[y]]
+            )
+          }
+        )
+      }
+    )
+    
+    sigs_present <- unique(mutation_prob_df$signature)
+    legend("topright", cex = 0.8, 
+           legend = sigs_present, xpd = TRUE,
+           inset = c(-0.2,0),
+           fill = color_vector[sigs_present],
+           border = NA,
+           bty = 'n')
+    
+    return(invisible(NULL))
+  }
+
+#' @title plot_mutation_probability_heatmap
+#'
+#' @description Plots heatmap of the probability each signature
+#' contributes to mutation class
+#'
+#' @param mutation_prob_df calculate_mutation_probabilities output [data frame]
+#' @param var Which value should be used (mean, CI025, CI975) [character vector]
+#' @export
+plot_mutation_probability_heatmap <-
+  function(mutation_prob_df, var = "mean", sample.id = "") {
+    to_plot <-
+      reshape2::dcast(mutation_prob_df, MutationTypes ~ signature, value.var = "mean")
+    rownames(to_plot) <- to_plot$MutationTypes
+    to_plot$MutationTypes <- NULL
+    
+    row_colors <- list(
+      bp = c(
+        CA = "#e41a1c",
+        CG = "#377eb8",
+        CT = "#4daf4a",
+        TA = "#984ea3",
+        TC = "#ff7f00",
+        TG = "#ffff33"
+      )
+    )
+    annotation_row <-
+      data.frame(
+        bp = gsub(
+          pattern = ">",
+          replacement = "",
+          x = substr(rownames(to_plot), 3, 5)
+        ),
+        row.names = rownames(to_plot)
+      )
+    
+    pheatmap::pheatmap(
+      to_plot,
+      main = sample.id,
+      color = RColorBrewer::brewer.pal(9, "YlOrRd"),
+      breaks = seq(0, 1, length.out = 10),
+      cluster_rows = TRUE,
+      cluster_cols = TRUE,
+      border_color = "lightgrey",
+      annotation_row = annotation_row,
+      annotation_colors = row_colors,
+      fontsize_row = 7,
+      scale = "none"
+    )
+}
+
+
+#' @title barplot_mutation_signatures
+#'
+#' @description Plots barplot of mutational signatures with CI for each sample
+#'
+#' @param bootsig_out Output from bootstrap_whichSignatures [data frame]
+#' @param color_vector Colors for signatures [character vector]
+#' @export
+barplot_mutation_signatures <-
+  function(deconstructSigs_out, color_vector = NULL, sample.id = "") {
+    if (is.null(color_vector)) {
+      color_vector <-
+        setNames(
+          c(
+            "#a6cee3",
+            "#1f78b4",
+            "#b2df8a",
+            "#33a02c",
+            "#fb9a99",
+            "#e31a1c",
+            "#fdbf6f",
+            "#cab2d6",
+            "#ffff99"
+          ),
+          c(
+            "Signature.1",
+            "Signature.2",
+            "Signature.5",
+            "Signature.4",
+            "Signature.6",
+            "Signature.7",
+            "Signature.13",
+            "Signature.10",
+            "Signature.11"
+          )
+        )
+    }
+    
+    bootsig_out <- deconstructSigs_out$mutSigsSummary
+    if(all(rownames(bootsig_out) == colnames(deconstructSigs_out$weights))){
+      bootsig_out$estimate <- as.numeric(deconstructSigs_out$weights)
+    } else {
+      warning("Check signature names in deconstructSigs output")
+    }
+    
+    bootsig_out <- bootsig_out[rowSums(bootsig_out) > 0,]
+    
+    bootsig_out$color <-
+      color_vector[match(rownames(bootsig_out), names(color_vector))]
+    
+    #A function to add arrows on the chart
+    error_bar <- function(x,
+                          upper,
+                          lower = upper,
+                          length = 0.1,
+                          ...) {
+      arrows(
+        x,
+        upper,
+        x,
+        lower,
+        angle = 90,
+        code = 3,
+        length = length,
+        ...
+      )
+    }
+    
+    bp <- barplot(
+      bootsig_out$estimate,
+      ylim = c(0, round(
+        x = max(apply(bootsig_out[, 2:4], MARGIN = 2, max)) + 0.05, digits = 1
+      )),
+      main = sample.id,
+      col = bootsig_out$color,
+      las = 2,
+      border = NA,
+      names = rownames(bootsig_out),
+      cex.names = 0.7,
+      ylab = "Signature weight"
+    )
+    error_bar(x = bp,
+              upper = bootsig_out$CI975,
+              lower = bootsig_out$CI025)
+    
+  }
 
 
 
