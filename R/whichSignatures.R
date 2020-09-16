@@ -184,7 +184,7 @@ whichSignatures = function(tumor.ref = NA,
   # @param signatures_df trincucleotide contexts as rows and signatures as columns [data frame]
   # @param exposures_df samples as rows and signatures as columns [data frame]
   
-  mut_probs <- calculate_mutation_probabilities(signatures_df = data.frame(t(signatures)),
+  mut_probs <- deconstructSigs:::calculate_mutation_probabilities(signatures_df = data.frame(t(signatures)),
                                                 exposures_df = weights[,which(weights>0),drop=FALSE])
   
   

@@ -90,7 +90,7 @@ bootstrap_whichSignatures <- function(mut.ref,
   }
   
   # run whichSignatures once
-  simple_out <-  whichSignatures(tumor.ref = tumor.ref, 
+  simple_out <-  deconstructSigs:::whichSignatures(tumor.ref = tumor.ref, 
                                  sample.id = sample.id, 
                                  signatures.ref = signatures.ref, 
                                  associated = associated, 

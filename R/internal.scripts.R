@@ -145,7 +145,6 @@ calculate_mutation_probabilities <- function(signatures_df, exposures_df){
   
   result <- do.call(rbind, boop)
   result <- data.frame(cbind(result[,c("Sample.Names", "MutationTypes")], result[,1:(ncol(result)-2)]), stringsAsFactors = FALSE)
-  #result <- result %>% dplyr::select(Sample.Names, MutationTypes, everything())
   return(result)
   
 }
