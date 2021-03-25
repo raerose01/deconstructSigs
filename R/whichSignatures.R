@@ -92,7 +92,7 @@ whichSignatures = function(tumor.ref = NA,
     stop(paste(sample.id, " not found in rownames of tumor.ref", sep = ''))
   }
   tumor <- subset(tumor, rownames(tumor) == sample.id)
-  if(round(rowSums(tumor), digits = 1) != 1){
+  if(round(rowSums(tumor), digits = 0) != 1){
     stop(paste('Sample: ', sample.id, ' is not normalized\n', 'Consider using "contexts.needed = TRUE"', sep = ' '))
   }
   
