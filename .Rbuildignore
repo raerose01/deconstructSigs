@@ -9,3 +9,6 @@
 .nfs*
 ^revdep$
 ^tests/*
+^data-raw$
+^\.radian_history$
+^Scratch\.RConsole$

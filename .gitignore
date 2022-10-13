@@ -3,3 +3,5 @@
 .RData
 .fuse*
 .nfs*
+Scratch.RConsole
+.radian_history
