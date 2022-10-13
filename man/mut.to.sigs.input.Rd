@@ -4,12 +4,19 @@
 \alias{mut.to.sigs.input}
 \title{Converts mutation list to correct input format}
 \usage{
-mut.to.sigs.input(mut.ref, sample.id = "Sample", chr = "chr",
-  pos = "pos", ref = "ref", alt = "alt", bsg = NULL,
-  sig.type = "SBS", dbs_table = dbs_possible)
+mut.to.sigs.input(
+  mut.ref,
+  sample.id = "Sample",
+  chr = "chr",
+  pos = "pos",
+  ref = "ref",
+  alt = "alt",
+  bsg = NULL,
+  sig.type = "SBS"
+)
 }
 \arguments{
-\item{mut.ref}{Location of the mutation file that is to be converted or name 
+\item{mut.ref}{Location of the mutation file that is to be converted or name
 of data frame in environment}
 
 \item{sample.id}{Column name in the mutation file corresponding to the Sample
@@ -17,46 +24,46 @@ ID}
 
 \item{chr}{Column name in the mutation file corresponding to the chromosome}
 
-\item{pos}{Column name in the mutation file corresponding to the mutation 
+\item{pos}{Column name in the mutation file corresponding to the mutation
 position}
 
-\item{ref}{Column name in the mutation file corresponding to the reference 
+\item{ref}{Column name in the mutation file corresponding to the reference
 base}
 
-\item{alt}{Column name in the mutation file corresponding to the alternate 
+\item{alt}{Column name in the mutation file corresponding to the alternate
 base}
 
 \item{bsg}{Only set if another genome build is required. Must be a BSgenome
 object.}
 
 \item{sig.type}{Are SBS or DBS signatures being used?}
-
-\item{dbs_table}{Possible DBS changes and their reverse complements}
 }
 \value{
-A data frame that contains sample IDs for the rows and trinucleotide 
-  contexts for the columns. Each entry is the count of how many times a 
+A data frame that contains sample IDs for the rows and trinucleotide
+  contexts for the columns. Each entry is the count of how many times a
   mutation with that trinucleotide context is seen in the sample.
 }
 \description{
-Given a mutation list, outputs a data frame with counts of how frequently a 
-mutation is found within each trinucleotide context per sample ID.  Output 
+Given a mutation list, outputs a data frame with counts of how frequently a
+mutation is found within each trinucleotide context per sample ID.  Output
 can be used as input into getTriContextFraction.
 }
 \details{
-The context sequence is taken from the BSgenome.Hsapiens.UCSC.hgX::Hsapiens 
-object. Therefore the coordinates must correspond to the human hgX assembly. 
-Default is set to the UCSC hg19 assembly, which corresponds to the GRCh37 
-assembly. If another assembly is required, it must already be present in the 
-R workspace and fed as a parameter. This method will translate chromosome 
+The context sequence is taken from the BSgenome.Hsapiens.UCSC.hgX::Hsapiens
+object. Therefore the coordinates must correspond to the human hgX assembly.
+Default is set to the UCSC hg19 assembly, which corresponds to the GRCh37
+assembly. If another assembly is required, it must already be present in the
+R workspace and fed as a parameter. This method will translate chromosome
 names from other versions of the assembly like NCBI or Ensembl. For instance,
-the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM"; 
+the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM";
 "GL000245.1" -> "chrUn_gl000245"; etc.
 }
 \examples{
 \dontrun{
-sigs.input = mut.to.sigs.input(mut.ref = sample.mut.ref, sample.id = "Sample",
-chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = 
-BSgenome.Hsapiens.UCSC.hg19, sig.type = 'SBS', dbs_table = dbs_possible)
+sigs.input <- mut.to.sigs.input(
+  mut.ref = sample.mut.ref, sample.id = "Sample",
+  chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg =
+    BSgenome.Hsapiens.UCSC.hg19, sig.type = "SBS", dbs_table = dbs_possible
+)
 }
 }

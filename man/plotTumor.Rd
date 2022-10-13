@@ -16,9 +16,10 @@ if wanted}
 Plots the trinucleotide frequency for the given tumor
 }
 \description{
-Uses the output from whichSignatures() and creates a plot of the given tumor 
+Uses the output from whichSignatures() and creates a plot of the given tumor
 mutational spectrum and the calculated one
 }
 \examples{
-plotTumor(example.output[['tumor']], sub = "example")
+plotTumor(example.output[["tumor"]], sub = "example")
+
 }

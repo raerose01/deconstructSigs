@@ -4,7 +4,9 @@
 \name{signatures.nature2013}
 \alias{signatures.nature2013}
 \title{Published Signatures from Alexandrov et al 2013}
-\format{A data frame of 27 rows and 96 columns}
+\format{
+A data frame of 27 rows and 96 columns
+}
 \source{
 \url{http://www.ncbi.nlm.nih.gov/pubmed/23945592}
 }
