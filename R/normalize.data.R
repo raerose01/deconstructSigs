@@ -22,9 +22,6 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
   }
 
   if (grepl("genome", trimer.counts.method)) {
-    stop(
-      "BSgenome.Hsapiens.UCSC.hg19 must be installed to use this function."
-    )
     if (is.null(genome.ref)) {
       genome.ref <- BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19
       tri.counts.wgs <- tri.counts.genome
