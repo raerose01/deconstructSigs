@@ -53,7 +53,6 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
       tri.counts.wes <- colSums(tri.counts.wes)[make_n_nucleotide(3L)]
     }
   }
-  GenomeInfoDb::keepSeqlevels()
 
   trimer.ratio <- switch(trimer.counts.method,
     # return mut counts divided by number of times that trinucleotide context is observed in the genome
