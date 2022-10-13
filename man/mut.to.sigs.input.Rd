@@ -60,10 +60,14 @@ the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM";
 }
 \examples{
 \dontrun{
+sample.mut.ref <- readRDS(
+    system.file("extdata", "randomly.generated.tumors.rds",
+                package = "deconstructSigs")
+)
 sigs.input <- mut.to.sigs.input(
   mut.ref = sample.mut.ref, sample.id = "Sample",
   chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg =
-    BSgenome.Hsapiens.UCSC.hg19, sig.type = "SBS", dbs_table = dbs_possible
+    BSgenome.Hsapiens.UCSC.hg19, sig.type = "SBS"
 )
 }
 }

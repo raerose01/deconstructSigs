@@ -13,15 +13,20 @@ License: GPL (>= 2)
 Imports:
     reshape2,
     BSgenome,
-    BSgenome.Hsapiens.UCSC.hg19,
+    Biostrings,
     GenomeInfoDb,
     grDevices,
     graphics,
-    utils
+    utils,
+    GenomicRanges,
+    methods
 Suggests:
-    VariantAnnotation
+    VariantAnnotation,
+    BSgenome.Hsapiens.UCSC.hg19
 LazyData: yes
 URL: https://github.com/raerose01/deconstructSigs
 BugReports: https://github.com/raerose01/deconstructSigs/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.1
 Encoding: UTF-8
+Depends: 
+    R (>= 3.5.0)

@@ -4,14 +4,17 @@
 \alias{getTriContextFraction}
 \title{Calculates trinucleotide context fraction}
 \usage{
-getTriContextFraction(mut.counts.ref, trimer.counts.method)
+getTriContextFraction(
+  mut.counts,
+  trimer.counts.method,
+  genome.ref = NULL,
+  chr.list = NULL,
+  exome.range = NULL
+)
 }
 \arguments{
-\item{mut.counts.ref}{data frame of counts of mutations in each trinucleotide
-context for each sample or location where .txt file is found}
-
-\item{trimer.counts.ref}{data frame of counts of times each trinculeotide
-context is seen in sequencing area or location where the .txt file is found}
+\item{mut.counts}{data frame of counts of mutations in each trinucleotide
+context for each sample}
 }
 \value{
 Returns the trinucleotide context fraction

@@ -3,13 +3,12 @@
 #' Uses golden section method to search given space for value that minimizes
 #' function given
 #'
-#' @keywords internal
 #' @param f function
 #' @param lower Lower bound to search in
 #' @param upper Upper bound to search in
 #' @param tol How exact the answer must be
 #' @return Returns a value that minimizes the function input
-#' @export
+#' @keywords internal
 golden.section.search <- function(f, lower, upper, tol = 1e-6) {
   golden.ratio <- (sqrt(5) - 1) / 2
 

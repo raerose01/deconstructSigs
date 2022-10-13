@@ -2,12 +2,10 @@
 #'
 #' Makes the contexts useable in plotSignatures()
 #'
-#' @keywords internal
 #' @param contexts One of the entries in the output list from whichSignatures()
 #' @return Returns a data frame with sample.id, full_context, fraction, and
 #'   mutation as column names
-
-#' @export
+#' @keywords internal
 formatContexts <- function(contexts) {
   for_plotting <- reshape2::melt(contexts)
   colnames(for_plotting)[1] <- "sample.id"
@@ -33,6 +31,10 @@ formatContexts <- function(contexts) {
 #'   the two on the bottom panel.
 #' @export
 #' @examples
+#' example.output <- readRDS(
+#'     system.file("extdata", "example.output.rds",
+#'                 package = "deconstructSigs")
+#' )
 #' plotSignatures(example.output, sub = "example", sig.type = "SBS")
 #'
 plotSignatures <- function(sigs.output, sig.type = "SBS", sub = "") {
@@ -140,6 +142,10 @@ plotSignatures <- function(sigs.output, sig.type = "SBS", sub = "") {
 #' @return Plots the trinucleotide frequency for the given tumor
 #' @export
 #' @examples
+#' example.output <- readRDS(
+#'     system.file("extdata", "example.output.rds",
+#'                 package = "deconstructSigs")
+#' )
 #' plotTumor(example.output[["tumor"]], sub = "example")
 #'
 plotTumor <- function(tumor, sub = "") {
@@ -186,11 +192,16 @@ plotTumor <- function(tumor, sub = "") {
 #' @param sigs.output The list output from whichSignatures()
 #' @param sub A character vector that specifies cancer subtype for plot title,
 #'   if wanted
+#' @param v3 whether use the cosmic.v3.2019 signatures
 #' @param add.color Optional character vector to assign additional colors for
 #'   novel signatures
 #' @return Plots a pie chart of the weights calculated in the given tumor sample
 #' @export
 #' @examples
+#' example.output <- readRDS(
+#'     system.file("extdata", "example.output.rds",
+#'                 package = "deconstructSigs")
+#' )
 #' makePie(example.output)
 makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL) {
   weights <- data.frame(sigs.output[["weights"]])
@@ -223,6 +234,12 @@ makePie <- function(sigs.output, sub = "", v3 = FALSE, add.color = NULL) {
 
   # giving up on color consistency
   if (v3 == TRUE) {
+    signatures.exome.cosmic.v3.may2019 <- read_data(
+      "signatures.exome.cosmic.v3.may2019"
+    )
+    signatures.dbs.cosmic.v3.may2019 <- read_data(
+      "signatures.dbs.cosmic.v3.may2019"
+    )
     all.sigs <- c(rownames(signatures.exome.cosmic.v3.may2019), rownames(signatures.dbs.cosmic.v3.may2019), "unknown")
     tmp_color <- grep("gr(a|e)y", grDevices::colors(), invert = TRUE, value = TRUE)
     all.colors <- c(tmp_color[c(
