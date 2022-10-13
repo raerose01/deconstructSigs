@@ -56,11 +56,11 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
 
   trimer.ratio <- switch(trimer.counts.method,
     # return mut counts divided by number of times that trinucleotide context is observed in the genome
-    genome = 1 / tri.counts.wgs,
+    genome = 1L / tri.counts.wgs,
 
     # return mut counts divided by number of times that trinucleotide context is
     # observed in the exome
-    exome = 1 / tri.counts.wes,
+    exome = 1L / tri.counts.wes,
 
     # use the ratio of WGS/WES to normalize the input data
     exome2genome = tri.counts.wgs / tri.counts.wes,
@@ -70,9 +70,9 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
   )
 
   norm.mut.counts <- sapply(colnames(mut.counts), function(x) {
-    norm.it(mut.counts[, x, drop = FALSE],
-      trimer.ratio = trimer.ratio
-    )
+    trimer <- strsplit(x, split = "")[[1L]]
+    trimer <- paste0(trimer[c(1L, 3L, 7L)], collapse = "")
+    mut.counts[[x]] * trimer.ratio[[trimer]]
   })
   norm.mut.counts <- data.frame(
     norm.mut.counts,
@@ -82,25 +82,6 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
 
   # make each row sum to 1
   norm.mut.counts / rowSums(norm.mut.counts)
-}
-
-#' Normalizes trinucleotide contexts
-#'
-#' Normalizes the trinucleotide contexts
-#'
-#' @param col column names
-#' @param trimer.counts count of the number of times each trimer is found in the area sequenced
-#' @return Returns a normalized column based on the trimer counts
-#' @keywords internal
-norm.it <- function(col, trimer.ratio) {
-  trimer <- paste(
-    substr(colnames(col), 1, 1),
-    substr(colnames(col), 3, 3),
-    substr(colnames(col), 7, 7),
-    sep = ""
-  )
-  new.col <- col * trimer.ratio[trimer, ]
-  return(new.col)
 }
 
 # From pipeline version to match signatures.txt file

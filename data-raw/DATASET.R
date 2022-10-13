@@ -20,6 +20,15 @@ ncol(signatures.genome.cosmic.v3.may2019) # 96L
 load("data-raw/dbs_possible.rda")
 load("data-raw/tri.counts.genome.rda")
 load("data-raw/tri.counts.exome.rda")
+tri.counts.genome <- structure(
+    tri.counts.genome[[1L]],
+    names = rownames(tri.counts.genome)
+)
+tri.counts.exome <- structure(
+    tri.counts.exome[[1L]],
+    names = rownames(tri.counts.exome)
+)
+
 usethis::use_data(
     dbs_possible,
     tri.counts.genome,
