@@ -6,34 +6,37 @@
 #'
 #' @param tumor.ref Either a data frame or location of input text file, where
 #'   rows are samples, columns are trinucleotide contexts
-#' @param sample.id Name of sample -- should be rowname of tumor.ref. Optional
-#'   if the tumor.ref contains one single sample
+#' @param sample.id Name of sample -- should be the rowname of tumor.ref.
+#'   Default: `NULL`, means run deconstructSigs for all samples (rows)
 #' @param signatures.ref Either a data frame or location of signature text file,
-#'   where rows are signatures, columns are trinucleotide contexts
+#'   where rows are signatures, columns are trinucleotide contexts. Default:
+#'   NULL, means `signatures.nature2013`.
+#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
+#'   only mutation counts. Default: `TRUE`.
+#' @param tri.counts.method Set to either:
+#' \itemize{
+#'  \item 'default' -- no further normalization
+#'  \item 'exome' -- normalized by number of times each trinucleotide context is
+#'   observed in the exome \item 'genome' -- normalized by number of times each
+#'   trinucleotide context is observed in the genome
+#' \item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
+#'   occurence in the genome to the trinucleotide's occurence in the exome
+#' \item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
+#'   occurence in the exome to the trinucleotide's occurence in the genome}
+#' @param genome.ref a reference genome [BSgenome] object to define
+#' trinucleotide's occurence.
+#' @param chr.list the chromose the use in the analysis. Default: `paste0("chr",
+#' c(1:22, "X", "Y"))`.
+#' @param exome.range a [GenomicRanges] object define the exome ranges.
 #' @param associated Vector of associated signatures. If given, will narrow the
 #'   signatures tested to only the ones listed.
 #' @param signatures.limit Number of signatures to limit the search to
 #' @param signature.cutoff Discard any signature contributions with a weight
 #'   less than this amount
-#' @param contexts.needed FALSE if tumor.file is a context file, TRUE if it is
-#'   only mutation counts
-#' @param tri.counts.method Set to either:
-#' \itemize{
-#'  \item 'default' -- no further normalization \item 'exome' -- normalized by
-#'   number of times each trinucleotide context is observed in the exome \item
-#'   'genome' -- normalized by number of times each trinucleotide context is
-#'   observed in the genome \item 'exome2genome' -- multiplied by a ratio of that
-#'   trinucleotide's occurence in the genome to the trinucleotide's occurence in
-#'   the exome \item 'genome2exome' -- multiplied by a ratio of that
-#'   trinucleotide's occurence in the exome to the trinucleotide's occurence in
-#'   the genome \item data frame containing user defined scaling factor -- count
-#'   data for each trinucleotide context is multiplied by the corresponding value
-#'   given in the data frame }
-#' @return A list of the weights for each signatures, the product when those are
-#'   multiplied on the signatures, the difference between the tumor sample and
-#'   product, the tumor sample tricontext distribution given, and the unknown
-#'   weight.
-#' @export
+#' @return A list for every samples, the element of the list is the weights for
+#'   each signatures, the product when those are multiplied on the signatures,
+#'   the difference between the tumor sample and product, the tumor sample
+#'   tricontext distribution given, and the unknown weight.
 #' @section Normalization: If the input data frame only contains the counts of
 #'   the mutations observed in each context, then the data frame must be
 #'   normalized. In these cases, the value of `contexts.needed` should be TRUE.
@@ -45,58 +48,105 @@
 #'   included in this package. For whole genome data, use the 'default' method
 #'   to obtain consistent results.
 #' @examples
+#' randomly.generated.tumors <- readRDS(
+#'     system.file("extdata", "randomly.generated.tumors.rds",
+#'                 package = "deconstructSigs")
+#' )
 #' test <- whichSignatures(
 #'   tumor.ref = randomly.generated.tumors,
 #'   sample.id = "2",
 #'   contexts.needed = FALSE
 #' )
-#'
-whichSignatures <- function(tumor.ref = NA,
-                            sample.id,
-                            signatures.ref = signatures.nature2013,
-                            associated = c(),
+#' @export
+whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
+                            signatures.ref = NULL,
+                            contexts.needed = TRUE,
+                            tri.counts.method = "default",
+                            genome.ref = NULL, chr.list = NULL,
+                            exome.range = NULL,
+                            associated = NULL,
                             signatures.limit = NA,
-                            signature.cutoff = 0.06,
-                            contexts.needed = FALSE,
-                            tri.counts.method = "default") {
-  if (class(tumor.ref) == "matrix") {
-    stop(paste("Input tumor.ref needs to be a data frame or location of input text file", sep = ""))
+                            signature.cutoff = 0.06) {
+  # check arguments --------------------------------------------------
+  tri.counts.method <- match.arg(
+    tri.counts.method,
+    c("default", "genome", "exome", "exome2genome", "genome2exome")
+  )
+  if (is.null(signatures.ref)) {
+    signatures.ref <- read_data("signatures.nature2013")
   }
-
-  if (ncol(signatures.ref) == 78 & tri.counts.method != "default") {
+  if (ncol(signatures.ref) == 78L && tri.counts.method != "default") {
     warning("Using default normalization for DBS signatures")
     tri.counts.method <- "default"
   }
-
+  if (!identical(tri.counts.method, "default") && isTRUE(contexts.needed)) {
+    if (!is.null(genome.ref) && !methods::is(genome.ref, "BSgenome")) {
+      stop("genome.ref should be a `BSgenome` object or `NULL`")
+    }
+    if (is.null(chr.list)) chr.list <- paste0("chr", c(1:22, "X", "Y"))
+    if (!is.null(exome.range) && !methods::is(exome.range, "GenomicRanges")) {
+      stop("exome.range shoudl be a `GenomicRanges` object or `NULL`")
+    }
+  }
+  # prepare data --------------------------------------------------------
   if (exists("tumor.ref", mode = "list")) {
     tumor <- tumor.ref
-    if (contexts.needed == TRUE) {
-      tumor <- getTriContextFraction(mut.counts.ref = tumor, trimer.counts.method = tri.counts.method)
+  } else if (is.character(tumor.ref)) {
+    if (file.exists(tumor.ref)) {
+      tumor <- utils::read.table(
+        tumor.ref,
+        sep = "\t", header = TRUE,
+        as.is = TRUE, check.names = FALSE
+      )
+    } else {
+      stop("tumor.ref is neither a file nor a loaded data frame", .call = FALSE)
     }
   } else {
-    if (file.exists(tumor.ref)) {
-      tumor <- utils::read.table(tumor.ref, sep = "\t", header = TRUE, as.is = TRUE, check.names = FALSE)
-      if (contexts.needed == TRUE) {
-        tumor <- getTriContextFraction(tumor, trimer.counts.method = tri.counts.method)
+    stop("Input tumor.ref needs to be a data frame or location of input text file", call. = FALSE)
+  }
+
+  if (isTRUE(contexts.needed)) {
+    tumor <- getTriContextFraction(
+      mut.counts = tumor,
+      trimer.counts.method = tri.counts.method,
+      genome.ref = genome.ref, chr.list = chr.list,
+      exome.range = exome.range
+    )
+  }
+  if (is.null(sample.id)) {
+    sample.id <- rownames(tumor)
+  } else {
+    sample.id <- intersect(rownames(tumor), as.character(sample.id))
+  }
+
+  if (length(sample.id)) {
+    # Take patient id given
+    tumor <- as.matrix(tumor)
+    res <- lapply(sample.id, function(x) {
+      message("Processing sample ", x, appendLF = TRUE)
+      sample_tumor <- tumor[x, , drop = FALSE]
+      if (abs(rowSums(sample_tumor) - 1L) >= sqrt(.Machine$double.eps)) {
+        stop(paste("Sample: ", x, " is not normalized\n", 'Consider using "contexts.needed = TRUE"', sep = " "))
       }
-    } else {
-      print("tumor.ref is neither a file nor a loaded data frame")
-    }
+      deconstruct_sig_core(
+        tumor = sample_tumor,
+        signatures.ref = signatures.ref,
+        associated = associated,
+        signatures.limit = signatures.limit,
+        signature.cutoff = signature.cutoff
+      )
+    })
+    names(res) <- sample.id
+    res
+  } else {
+    warning("No sample to run", call. = FALSE)
   }
+}
 
-  if (missing(sample.id) && nrow(tumor) == 1) {
-    sample.id <- rownames(tumor)[1]
-  }
-  # Take patient id given
-  tumor <- as.matrix(tumor)
-  if (!sample.id %in% rownames(tumor)) {
-    stop(paste(sample.id, " not found in rownames of tumor.ref", sep = ""))
-  }
-  tumor <- subset(tumor, rownames(tumor) == sample.id)
-  if (round(rowSums(tumor), digits = 1) != 1) {
-    stop(paste("Sample: ", sample.id, " is not normalized\n", 'Consider using "contexts.needed = TRUE"', sep = " "))
-  }
-
+deconstruct_sig_core <- function(tumor, signatures.ref,
+                                 associated = NULL,
+                                 signatures.limit = NA,
+                                 signature.cutoff = 0.06) {
   # Read in Stratton signatures file
   if (exists("signatures.ref", mode = "list")) {
     signatures <- signatures.ref
@@ -123,8 +173,11 @@ whichSignatures <- function(tumor.ref = NA,
   tumor <- tumor[, colnames(signatures), drop = FALSE]
 
   # Take a subset of the signatures
-  if (!is.null(associated)) {
-    signatures <- signatures[rownames(signatures) %in% associated, , drop = FALSE]
+  if (is.character(associated)) {
+    signatures <- signatures[
+      rownames(signatures) %in% associated, ,
+      drop = FALSE
+    ]
   }
 
   if (is.na(signatures.limit)) {
@@ -133,12 +186,20 @@ whichSignatures <- function(tumor.ref = NA,
 
   # Remove signatures from possibilities if they have a "strong" peak not seen in the tumor sample
   zero.contexts <- colnames(tumor)[tumor < 0.01]
-  corr.sigs <- which(signatures[, zero.contexts, drop = FALSE] >= 0.2, arr.ind = T)
-  signatures <- signatures[which(!rownames(signatures) %in% rownames(corr.sigs)), , drop = FALSE]
-  # print(paste(rownames(corr.sigs), " not considered in the analysis.", sep = ""))
+  corr.sigs <- which(
+    signatures[, zero.contexts, drop = FALSE] >= 0.2,
+    arr.ind = TRUE
+  )
+  signatures <- signatures[
+    which(!rownames(signatures) %in% rownames(corr.sigs)), ,
+    drop = FALSE
+  ]
 
   # Set the weights matrix to 0
-  weights <- matrix(0, nrow = nrow(tumor), ncol = nrow(signatures), dimnames = list(rownames(tumor), rownames(signatures)))
+  weights <- matrix(0,
+    nrow = nrow(tumor), ncol = nrow(signatures),
+    dimnames = list(rownames(tumor), rownames(signatures))
+  )
 
   seed <- findSeed(tumor, signatures)
   weights[seed] <- 1
@@ -147,12 +208,12 @@ whichSignatures <- function(tumor.ref = NA,
   error_diff <- Inf
   error_threshold <- 1e-3
 
-  num <- 0
+  num <- 0L
   while (error_diff > error_threshold) {
-    num <- num + 1
+    num <- num + 1L
     # print(num)
     error_pre <- getError(tumor, signatures, w)
-    if (error_pre == 0) {
+    if (error_pre == 0L) {
       break
     }
     # print(w)
@@ -165,16 +226,19 @@ whichSignatures <- function(tumor.ref = NA,
   }
 
   weights <- w / sum(w)
-  unknown <- 0
+  unknown <- 0L
 
   ## filtering on a given threshold value (0.06 default)
-  weights[weights < signature.cutoff] <- 0
-  unknown <- 1 - sum(weights)
+  weights[weights < signature.cutoff] <- 0L
+  unknown <- 1L - sum(weights)
 
   product <- weights %*% signatures
   diff <- tumor - product
 
-  x <- matrix(data = 0, nrow = 1, ncol = nrow(original.sigs), dimnames = list(rownames(weights), rownames(original.sigs)))
+  x <- matrix(
+    data = 0L, nrow = 1L, ncol = nrow(original.sigs),
+    dimnames = list(rownames(weights), rownames(original.sigs))
+  )
   x <- data.frame(x)
   x[colnames(weights)] <- weights
   weights <- x

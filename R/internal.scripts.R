@@ -4,13 +4,12 @@
 #' Finds error between calculated trinucleotide context fractions and inputted
 #' ones
 #'
-#' @keywords internal
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
 #' @param w Weights matrix
 #' @return Returns the sum squared error between calculated and actual
 #'   trinucleotide context fractions
-#' @export
+#' @keywords internal
 getError <- function(tumor, signatures, w) {
   w_norm <- w / sum(w)
   product <- w_norm %*% signatures
@@ -27,12 +26,11 @@ getError <- function(tumor, signatures, w) {
 #' Determines which single signature results in the lowest sum-squared error and
 #' uses that as a seed to start from
 #'
-#' @keywords internal
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
 #' @return Returns the index corresponding to the signature that best describes
 #'   the input data
-#' @export
+#' @keywords internal
 findSeed <- function(tumor, signatures) {
   w0 <- vector()
   for (i in 1:nrow(signatures)) {
@@ -49,13 +47,12 @@ findSeed <- function(tumor, signatures) {
 #' Determines what proportion of what signature, when added to the current
 #' weights matrix, results in the lowest sum-squared error
 #'
-#' @keywords internal
 #' @param tumor Actual trinucleotide context fractions
 #' @param signatures Signatures matrix
 #' @param w Weights matrix
 #' @param signatures.limit Number of signatures to limit the search to
 #' @return Returns an updated weights matrix
-#' @export
+#' @keywords internal
 updateW_GR <- function(tumor, signatures, w, signatures.limit, bound = 100) {
   error_old <- getError(tumor, signatures, w)
   boo <- matrix(+Inf, nrow = 1, ncol = nrow(signatures))
@@ -106,3 +103,26 @@ updateW_GR <- function(tumor, signatures, w, signatures.limit, bound = 100) {
 }
 
 ################################################
+make_n_nucleotide <- function(n) {
+    pairs_list <- list(
+        c("T", "A", "C", "G"),
+        c("T", "C")
+    )
+    if (n > 2L) {
+        pairs_list <- c(
+            pairs_list,
+            rep(list(c("T", "A", "C", "G")), n - 2L)
+        )
+    }
+    n_pairs <- expand.grid(pairs_list)
+    n_nucleotide <- .mapply(paste, n_pairs, list(sep = ""))
+    unlist(n_nucleotide, recursive = FALSE, use.names = FALSE)
+}
+
+read_data <- function(x, package = "deconstructSigs") {
+  res <- utils::data(
+    list = x, package = package, envir = environment(),
+    verbose = FALSE
+  )
+  get(res[[1]], envir = environment())
+}
