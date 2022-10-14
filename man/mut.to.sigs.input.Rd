@@ -12,6 +12,7 @@ mut.to.sigs.input(
   ref = "ref",
   alt = "alt",
   bsg = NULL,
+  chr.list = NULL,
   sig.type = "SBS"
 )
 }
@@ -35,6 +36,9 @@ base}
 
 \item{bsg}{Only set if another genome build is required. Must be a BSgenome
 object.}
+
+\item{chr.list}{what targetedd chromosome should be used in the analysis.
+Default: NULL, means all chromosome}
 
 \item{sig.type}{Are SBS or DBS signatures being used?}
 }
@@ -61,8 +65,9 @@ the following transformation will be done: "1" -> "chr1"; "MT" -> "chrM";
 \examples{
 \dontrun{
 sample.mut.ref <- readRDS(
-    system.file("extdata", "randomly.generated.tumors.rds",
-                package = "deconstructSigs")
+  system.file("extdata", "randomly.generated.tumors.rds",
+    package = "deconstructSigs"
+  )
 )
 sigs.input <- mut.to.sigs.input(
   mut.ref = sample.mut.ref, sample.id = "Sample",

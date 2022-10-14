@@ -26,6 +26,8 @@
 #'   base
 #' @param bsg Only set if another genome build is required. Must be a BSgenome
 #'   object.
+#' @param chr.list what targetedd chromosome should be used in the analysis.
+#' Default: NULL, means all chromosome
 #' @param sig.type Are SBS or DBS signatures being used?
 #' @return A data frame that contains sample IDs for the rows and trinucleotide
 #'   contexts for the columns. Each entry is the count of how many times a
@@ -33,8 +35,9 @@
 #' @examples
 #' \dontrun{
 #' sample.mut.ref <- readRDS(
-#'     system.file("extdata", "randomly.generated.tumors.rds",
-#'                 package = "deconstructSigs")
+#'   system.file("extdata", "randomly.generated.tumors.rds",
+#'     package = "deconstructSigs"
+#'   )
 #' )
 #' sigs.input <- mut.to.sigs.input(
 #'   mut.ref = sample.mut.ref, sample.id = "Sample",
@@ -43,7 +46,7 @@
 #' )
 #' }
 #' @export
-mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = NULL, sig.type = "SBS") {
+mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = "pos", ref = "ref", alt = "alt", bsg = NULL, chr.list = NULL, sig.type = "SBS") {
   if (exists("mut.ref", mode = "list")) {
     mut.full <- mut.ref
   } else {
@@ -55,7 +58,7 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
   }
 
   mut <- mut.full[, c(sample.id, chr, pos, ref, alt)]
-
+  if (!is.null(chr.list)) mut <- mut[mut[[chr]] %in% chr.list, ]
   # don't need trinucleotide context if looking for DBS
   if (sig.type == "DBS") {
     mut[, ref] <- as.character(mut[, ref])
@@ -112,7 +115,10 @@ mut.to.sigs.input <- function(mut.ref, sample.id = "Sample", chr = "chr", pos = 
       mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(bsg), ]
     }
     # Add in context
-    mut$context <- BSgenome::getSeq(bsg, mut[, chr], mut[, pos] - 1, mut[, pos] + 1, as.character = TRUE)
+    mut$context <- BSgenome::getSeq(
+      bsg, mut[, chr], mut[, pos] - 1, mut[, pos] + 1,
+      as.character = TRUE
+    )
     mut$mutcat <- paste(mut[, ref], ">", mut[, alt], sep = "")
 
     if (any(substr(mut[, ref], 1, 1) != substr(mut[, "context"], 2, 2))) {

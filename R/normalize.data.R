@@ -28,11 +28,13 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
     } else if (identical(genome.ref, BSgenome.Hsapiens.UCSC.hg19::BSgenome.Hsapiens.UCSC.hg19)) {
       tri.counts.wgs <- tri.counts.genome
     } else {
+      if (is.null(chr.list)) {
+        wgs.chr <- GenomeInfoDb::seqnames(genome.ref)
+      } else {
+        wgs.chr <- intersect(GenomeInfoDb::seqnames(genome.ref), chr.list)
+      }
       tri.counts.wgs <- Biostrings::trinucleotideFrequency(
-        BSgenome::getSeq(
-          genome.ref,
-          intersect(GenomeInfoDb::seqnames(genome.ref), chr.list)
-        )
+        BSgenome::getSeq(genome.ref, wgs.chr)
       )
       tri.counts.wgs <- colSums(tri.counts.wgs)
     }
@@ -43,10 +45,12 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
       tri.counts.wes <- tri.counts.exome
     } else {
       exome.range <- GenomicRanges::reduce(exome.range)
-      exome.range <- GenomeInfoDb::keepSeqlevels(
-        exome.range, chr.list,
-        pruning.mode = "tidy"
-      )
+      if (!is.null(chr.list)) {
+        exome.range <- GenomeInfoDb::keepSeqlevels(
+          exome.range, chr.list,
+          pruning.mode = "tidy"
+        )
+      }
       tri.counts.wes <- Biostrings::trinucleotideFrequency(
         BSgenome::getSeq(genome.ref, exome.range)
       )

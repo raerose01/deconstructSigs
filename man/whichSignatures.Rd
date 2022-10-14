@@ -46,8 +46,8 @@ only mutation counts. Default: `TRUE`.}
 \item{genome.ref}{a reference genome [BSgenome] object to define
 trinucleotide's occurence.}
 
-\item{chr.list}{the chromose the use in the analysis. Default: `paste0("chr",
-c(1:22, "X", "Y"))`.}
+\item{chr.list}{what targetedd chromosome should be used in the analysis.
+Default: NULL, means all chromosome will be used to calculate fraction.}
 
 \item{exome.range}{a [GenomicRanges] object define the exome ranges.}
 

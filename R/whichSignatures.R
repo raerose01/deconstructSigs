@@ -25,8 +25,8 @@
 #'   occurence in the exome to the trinucleotide's occurence in the genome}
 #' @param genome.ref a reference genome [BSgenome] object to define
 #' trinucleotide's occurence.
-#' @param chr.list the chromose the use in the analysis. Default: `paste0("chr",
-#' c(1:22, "X", "Y"))`.
+#' @param chr.list what targetedd chromosome should be used in the analysis.
+#' Default: NULL, means all chromosome will be used to calculate fraction. 
 #' @param exome.range a [GenomicRanges] object define the exome ranges.
 #' @param associated Vector of associated signatures. If given, will narrow the
 #'   signatures tested to only the ones listed.
@@ -83,7 +83,6 @@ whichSignatures <- function(tumor.ref = NA, sample.id = NULL,
     if (!is.null(genome.ref) && !methods::is(genome.ref, "BSgenome")) {
       stop("genome.ref should be a `BSgenome` object or `NULL`")
     }
-    if (is.null(chr.list)) chr.list <- paste0("chr", c(1:22, "X", "Y"))
     if (!is.null(exome.range) && !methods::is(exome.range, "GenomicRanges")) {
       stop("exome.range shoudl be a `GenomicRanges` object or `NULL`")
     }
