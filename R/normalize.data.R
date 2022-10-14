@@ -34,7 +34,7 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
           intersect(GenomeInfoDb::seqnames(genome.ref), chr.list)
         )
       )
-      tri.counts.wgs <- colSums(tri.counts.wgs)[make_n_nucleotide(3L)]
+      tri.counts.wgs <- colSums(tri.counts.wgs)
     }
   }
 
@@ -50,10 +50,12 @@ getTriContextFraction <- function(mut.counts, trimer.counts.method,
       tri.counts.wes <- Biostrings::trinucleotideFrequency(
         BSgenome::getSeq(genome.ref, exome.range)
       )
-      tri.counts.wes <- colSums(tri.counts.wes)[make_n_nucleotide(3L)]
+      tri.counts.wes <- colSums(tri.counts.wes)
     }
   }
-
+  tri_nuc <- make_n_nucleotide(3L)
+  tri.counts.wgs <- tri.counts.wgs[tri_nuc]
+  tri.counts.wes <- tri.counts.wes[tri_nuc]
   trimer.ratio <- switch(trimer.counts.method,
     # return mut counts divided by number of times that trinucleotide context is observed in the genome
     genome = 1L / tri.counts.wgs,
