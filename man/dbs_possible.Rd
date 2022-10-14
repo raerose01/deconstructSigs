@@ -4,12 +4,14 @@
 \name{dbs_possible}
 \alias{dbs_possible}
 \title{Table of Possible DBS mutations and their reverse complement}
-\format{A data frame of 30 rows and 96 columns}
+\format{
+A data frame of 30 rows and 96 columns
+}
 \source{
 \url{https://www.synapse.org/#!Synapse:syn12009743}
 }
 \description{
-A dataset containing the additional signatures identified read into R as a 
+A dataset containing the additional signatures identified read into R as a
 data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
 }
 \keyword{datasets}

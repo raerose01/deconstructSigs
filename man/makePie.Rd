@@ -4,13 +4,15 @@
 \alias{makePie}
 \title{Plots the weights from whichSignatures()}
 \usage{
-makePie(sigs.output, sub = "", add.color = NULL)
+makePie(sigs.output, sub = "", v3 = FALSE, add.color = NULL)
 }
 \arguments{
 \item{sigs.output}{The list output from whichSignatures()}
 
-\item{sub}{A character vector that specifies cancer subtype for plot title, 
+\item{sub}{A character vector that specifies cancer subtype for plot title,
 if wanted}
+
+\item{v3}{whether use the cosmic.v3.2019 signatures}
 
 \item{add.color}{Optional character vector to assign additional colors for
 novel signatures}
@@ -23,5 +25,9 @@ Uses the output from whichSignatures() and creates a pie chart of the weights
 outputted
 }
 \examples{
+example.output <- readRDS(
+    system.file("extdata", "example.output.rds",
+                package = "deconstructSigs")
+)
 makePie(example.output)
 }

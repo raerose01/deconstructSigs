@@ -4,50 +4,66 @@
 \alias{whichSignatures}
 \title{Which signatures are present}
 \usage{
-whichSignatures(tumor.ref = NA, sample.id,
-  signatures.ref = signatures.nature2013, associated = c(),
-  signatures.limit = NA, signature.cutoff = 0.06,
-  contexts.needed = FALSE, tri.counts.method = "default")
+whichSignatures(
+  tumor.ref = NA,
+  sample.id = NULL,
+  signatures.ref = NULL,
+  contexts.needed = TRUE,
+  tri.counts.method = "default",
+  genome.ref = NULL,
+  chr.list = NULL,
+  exome.range = NULL,
+  associated = NULL,
+  signatures.limit = NA,
+  signature.cutoff = 0.06
+)
 }
 \arguments{
-\item{tumor.ref}{Either a data frame or location of input text file, where 
+\item{tumor.ref}{Either a data frame or location of input text file, where
 rows are samples, columns are trinucleotide contexts}
 
-\item{sample.id}{Name of sample -- should be rowname of tumor.ref. Optional
-if the tumor.ref contains one single sample}
+\item{sample.id}{Name of sample -- should be the rowname of tumor.ref.
+Default: `NULL`, means run deconstructSigs for all samples (rows)}
 
 \item{signatures.ref}{Either a data frame or location of signature text file,
-where rows are signatures, columns are trinucleotide contexts}
+where rows are signatures, columns are trinucleotide contexts. Default:
+NULL, means `signatures.nature2013`.}
 
-\item{associated}{Vector of associated signatures. If given, will narrow the 
+\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is
+only mutation counts. Default: `TRUE`.}
+
+\item{tri.counts.method}{Set to either:
+\itemize{
+ \item 'default' -- no further normalization
+ \item 'exome' -- normalized by number of times each trinucleotide context is
+  observed in the exome \item 'genome' -- normalized by number of times each
+  trinucleotide context is observed in the genome
+\item 'exome2genome' -- multiplied by a ratio of that trinucleotide's
+  occurence in the genome to the trinucleotide's occurence in the exome
+\item 'genome2exome' -- multiplied by a ratio of that trinucleotide's
+  occurence in the exome to the trinucleotide's occurence in the genome}}
+
+\item{genome.ref}{a reference genome [BSgenome] object to define
+trinucleotide's occurence.}
+
+\item{chr.list}{what targetedd chromosome should be used in the analysis.
+Default: NULL, means all chromosome will be used to calculate fraction.}
+
+\item{exome.range}{a [GenomicRanges] object define the exome ranges.}
+
+\item{associated}{Vector of associated signatures. If given, will narrow the
 signatures tested to only the ones listed.}
 
 \item{signatures.limit}{Number of signatures to limit the search to}
 
-\item{signature.cutoff}{Discard any signature contributions with a weight 
+\item{signature.cutoff}{Discard any signature contributions with a weight
 less than this amount}
-
-\item{contexts.needed}{FALSE if tumor.file is a context file, TRUE if it is 
-only mutation counts}
-
-\item{tri.counts.method}{Set to either:
-\itemize{
- \item 'default' -- no further normalization \item 'exome' -- normalized by
-  number of times each trinucleotide context is observed in the exome \item
-  'genome' -- normalized by number of times each trinucleotide context is
-  observed in the genome \item 'exome2genome' -- multiplied by a ratio of that
-  trinucleotide's occurence in the genome to the trinucleotide's occurence in
-  the exome \item 'genome2exome' -- multiplied by a ratio of that
-  trinucleotide's occurence in the exome to the trinucleotide's occurence in
-  the genome \item data frame containing user defined scaling factor -- count
-  data for each trinucleotide context is multiplied by the corresponding value
-  given in the data frame }}
 }
 \value{
-A list of the weights for each signatures, the product when those are
-  multiplied on the signatures, the difference between the tumor sample and 
-  product, the tumor sample tricontext distribution given, and the unknown 
-  weight.
+A list for every samples, the element of the list is the weights for
+  each signatures, the product when those are multiplied on the signatures,
+  the difference between the tumor sample and product, the tumor sample
+  tricontext distribution given, and the unknown weight.
 }
 \description{
 Determines how much of each signature is present in the sample given
@@ -66,7 +82,13 @@ Determines how much of each signature is present in the sample given
 }
 
 \examples{
-test = whichSignatures(tumor.ref = randomly.generated.tumors,
-                       sample.id = "2", 
-                       contexts.needed = FALSE)
+randomly.generated.tumors <- readRDS(
+    system.file("extdata", "randomly.generated.tumors.rds",
+                package = "deconstructSigs")
+)
+test <- whichSignatures(
+  tumor.ref = randomly.generated.tumors,
+  sample.id = "2",
+  contexts.needed = FALSE
+)
 }

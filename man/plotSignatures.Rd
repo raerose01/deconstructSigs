@@ -15,14 +15,19 @@ plotSignatures(sigs.output, sig.type = "SBS", sub = "")
 if wanted}
 }
 \value{
-Plots the trinucleotide frequency for the given tumor on the top 
-  panel, the calculated one on the middle panel, and the difference between 
+Plots the trinucleotide frequency for the given tumor on the top
+  panel, the calculated one on the middle panel, and the difference between
   the two on the bottom panel.
 }
 \description{
-Uses the output from whichSignatures() and creates a plot of the given tumor 
+Uses the output from whichSignatures() and creates a plot of the given tumor
 mutational spectrum and the calculated one
 }
 \examples{
-plotSignatures(example.output, sub = "example", sig.type = 'SBS')
+example.output <- readRDS(
+    system.file("extdata", "example.output.rds",
+                package = "deconstructSigs")
+)
+plotSignatures(example.output, sub = "example", sig.type = "SBS")
+
 }

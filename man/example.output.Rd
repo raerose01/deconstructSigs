@@ -4,7 +4,9 @@
 \name{example.output}
 \alias{example.output}
 \title{Example output of whichSignatures()}
-\format{A list of four elements}
+\format{
+A list of four elements
+}
 \description{
 A list that was generated from running whichSignatures().  It contains the
 following:

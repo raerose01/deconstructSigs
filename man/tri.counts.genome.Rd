@@ -4,7 +4,9 @@
 \name{tri.counts.genome}
 \alias{tri.counts.genome}
 \title{The counts of every trinuclotide frequency in a genome}
-\format{A data frame of 32 rows and 1 column that contains the counts}
+\format{
+A data frame of 32 rows and 1 column that contains the counts
+}
 \description{
 A datset containing the number of times each trinucleotide (ex: ACA) is found
 in the hg19 genome. Can be used as the

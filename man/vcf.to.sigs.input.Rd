@@ -34,6 +34,6 @@ This method relies on the VariantAnnotation package to read the VCF file.
 }
 \examples{
 \dontrun{
-sigs.input = vcf.to.sigs.input(vcf = "variants.vcf")
+sigs.input <- vcf.to.sigs.input(vcf = "variants.vcf")
 }
 }

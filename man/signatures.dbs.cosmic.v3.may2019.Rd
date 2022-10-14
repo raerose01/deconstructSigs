@@ -4,12 +4,14 @@
 \name{signatures.dbs.cosmic.v3.may2019}
 \alias{signatures.dbs.cosmic.v3.may2019}
 \title{New DBS Signatures from Sanger COSMIC (May 2019)}
-\format{A data frame of 11 rows and 78 columns}
+\format{
+A data frame of 11 rows and 78 columns
+}
 \source{
 \url{https://www.synapse.org/#!Synapse:syn12009743}
 }
 \description{
-A dataset containing the double base substitution signatures identified read into R as a 
+A dataset containing the double base substitution signatures identified read into R as a
 data frame. Can be used the 'signatures.ref' parameter in whichSignatures().
 }
 \keyword{datasets}

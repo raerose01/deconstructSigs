@@ -1,1 +1,0 @@
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("signatures.nature2013", "signatures.cosmic", "signatures.exome.cosmic.v3.may2019", "signatures.genome.cosmic.v3.may2019", "tri.counts.exome", "tri.counts.genome", "dbs_possible", "signatures.dbs.cosmic.v3.may2019"))
