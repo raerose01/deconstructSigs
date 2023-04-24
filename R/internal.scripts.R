@@ -17,7 +17,7 @@ getError = function(tumor, signatures, w){
   error = tumor - product
   penalized.error = error
   neg = which(penalized.error < 0)
-  penalized.error[,neg] = 1*penalized.error[,neg]
+  penalized.error[[neg]] = 1*penalized.error[[neg]]
   tot = sum(penalized.error * penalized.error)
   return(tot)
 } 

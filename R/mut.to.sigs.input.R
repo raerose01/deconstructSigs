@@ -54,40 +54,40 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
   
   # don't need trinucleotide context if looking for DBS
   if(sig.type == 'DBS'){
-    mut[,ref] <- as.character(mut[,ref])
-    mut[,alt] <- as.character(mut[,alt])
-    mut <- mut[which(nchar(mut[, ref]) ==2 & nchar(mut[,alt]) == 2),]
-    mut$dbs <- paste(mut[,ref], mut[,alt], sep = '>') 
+    mut[[ref]] <- as.character(mut[[ref]])
+    mut[[alt]] <- as.character(mut[[alt]])
+    mut <- mut[which(nchar(mut[[ref]]) ==2 & nchar(mut[[alt]]) == 2),]
+    mut$dbs <- paste(mut[[ref]], mut[[alt]], sep = '>') 
     mut$dbs_condensed <- dbs_possible$dbs_condensed[match(mut$dbs, dbs_possible$dbs)]
     final.df <- as.data.frame.matrix(table(mut[,sample.id], factor(mut$dbs_condensed, levels = unique(dbs_possible$dbs_condensed))), stringsAsFactors = FALSE)
   }
   
   # And now look at SBS
-  #mut.lengths <- with(mut, nchar(as.character(mut[,ref])))
+  #mut.lengths <- with(mut, nchar(as.character(mut[[ref]])))
   #mut.lengths <- with(mut, nchar(as.character(ref)))
   #mut <- mut[which(mut.lengths == 1),]
-  #mut$mut.lengths <- nchar(as.character(mut[, ref]))
+  #mut$mut.lengths <- nchar(as.character(mut[[ref]]))
   if(sig.type == 'SBS'){
-    mut <- mut[which(mut[, ref] %in% c('A', 'T', 'C', 'G') & mut[, alt] %in% c('A', 'T', 'C', 'G')),]
+    mut <- mut[which(mut[[ref]] %in% c('A', 'T', 'C', 'G') & mut[[alt]] %in% c('A', 'T', 'C', 'G')),]
   
     # Fix the chromosome names (in case they come from Ensembl instead of UCSC)
-    mut[, chr] <- factor(mut[, chr])
-    levels(mut[, chr]) <- sub("^([0-9XY])", "chr\\1", levels(mut[, chr]))
-    levels(mut[, chr]) <- sub("^MT", "chrM", levels(mut[, chr]))
-    levels(mut[, chr]) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut[, chr]), perl = T)
+    mut[[chr]] <- factor(mut[[chr]])
+    levels(mut[[chr]]) <- sub("^([0-9XY])", "chr\\1", levels(mut[[chr]]))
+    levels(mut[[chr]]) <- sub("^MT", "chrM", levels(mut[[chr]]))
+    levels(mut[[chr]]) <- sub("^(GL[0-9]+).[0-9]", "chrUn_\\L\\1", levels(mut[[chr]]), perl = T)
   
     # Check the genome version the user wants to use
     # If set to default, carry on happily
     if(is.null(bsg)){
       # Remove any entry in chromosomes that do not exist in the BSgenome.Hsapiens.UCSC.hg19::Hsapiens object    
-      unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens)))]
+      unknown.regions <- levels(mut[[chr]])[which(!(levels(mut[[chr]]) %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens)))]
       if (length(unknown.regions) > 0) {
         unknown.regions <- paste(unknown.regions, collapse = ',\ ')
         warning(paste('Check chr names -- not all match BSgenome.Hsapiens.UCSC.hg19::Hsapiens object:\n', unknown.regions, sep = ' '))      
-        mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens), ]
+        mut <- mut[mut[[chr]] %in% GenomeInfoDb::seqnames(BSgenome.Hsapiens.UCSC.hg19::Hsapiens), ]
       }
       # Add in context
-      mut$context = BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, mut[,chr], mut[,pos]-1, mut[,pos]+1, as.character = T)
+      mut$context = BSgenome::getSeq(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, mut[[chr]], mut[[pos]]-1, mut[[pos]]+1, as.character = T)
     }
     
     # If set to another build, use that one 
@@ -97,21 +97,21 @@ mut.to.sigs.input = function(mut.ref, sample.id = 'Sample', chr = 'chr', pos = '
         stop('The bsg parameter needs to either be set to default or a BSgenome object.')
       }
       # Remove any entry in chromosomes that do not exist in the BSgenome.Hsapiens.UCSC.hgX::Hsapiens object
-      unknown.regions <- levels(mut[, chr])[which(!(levels(mut[, chr]) %in% GenomeInfoDb::seqnames(bsg)))]
+      unknown.regions <- levels(mut[[chr]])[which(!(levels(mut[[chr]]) %in% GenomeInfoDb::seqnames(bsg)))]
       if (length(unknown.regions) > 0) {
         unknown.regions <- paste(unknown.regions, collapse = ',\ ')
         warning(paste('Check chr names -- not all match',attr(bsg, which = 'pkgname'),'object:\n', unknown.regions, sep = ' '))
-        mut <- mut[mut[, chr] %in% GenomeInfoDb::seqnames(bsg), ]
+        mut <- mut[mut[[chr]] %in% GenomeInfoDb::seqnames(bsg), ]
       }
       # Add in context
-      mut$context = BSgenome::getSeq(bsg, mut[,chr], mut[,pos]-1, mut[,pos]+1, as.character = T) 
+      mut$context = BSgenome::getSeq(bsg, mut[[chr]], mut[[pos]]-1, mut[[pos]]+1, as.character = T) 
     }
    
-    mut$mutcat = paste(mut[,ref], ">", mut[,alt], sep = "")
+    mut$mutcat = paste(mut[[ref]], ">", mut[[alt]], sep = "")
     
-    if(any(substr(mut[,ref], 1, 1) != substr(mut[,'context'], 2, 2))){
-      bad = mut[ which(substr(mut[,ref], 1, 1) != substr(mut[,'context'], 2, 2)), ]
-      bad = paste(bad[,sample.id], bad[,chr], bad[,pos], bad[,ref], bad[,alt], sep = ':')
+    if(any(substr(mut[[ref]], 1, 1) != substr(mut[,'context'], 2, 2))){
+      bad = mut[ which(substr(mut[[ref]], 1, 1) != substr(mut[,'context'], 2, 2)), ]
+      bad = paste(bad[,sample.id], bad[[chr]], bad[[pos]], bad[[ref]], bad[[alt]], sep = ':')
       bad = paste(bad, collapse = ',\ ')
       warning(paste('Check ref bases -- not all match context:\n ', bad, sep = ' '))
     }
